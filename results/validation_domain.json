@@ -1,0 +1,208 @@
+{
+ "flights": [
+  {
+   "q_max_ascent_kpa": 129.87665555595527,
+   "qalpha_max_kpa_deg": 10.47583267007545,
+   "burnout_mach": 6.329818762588878,
+   "apogee_km": 236.0,
+   "apogee_sim_km": 236.0005235063797,
+   "flight": "V01",
+   "site": "CLA",
+   "elevation": 84.0,
+   "payload_kg": 392.0
+  },
+  {
+   "q_max_ascent_kpa": 128.91292525575204,
+   "qalpha_max_kpa_deg": 4.010379158644675,
+   "burnout_mach": 6.43187889228098,
+   "apogee_km": 264.4,
+   "apogee_sim_km": 256.2590324248318,
+   "flight": "V02",
+   "site": "Esrange",
+   "elevation": 87.7,
+   "payload_kg": 372.2
+  },
+  {
+   "q_max_ascent_kpa": 124.95940656098941,
+   "qalpha_max_kpa_deg": 4.045223978734767,
+   "burnout_mach": 6.235825572538706,
+   "apogee_km": 237.0,
+   "apogee_sim_km": 239.03981557204762,
+   "flight": "V03",
+   "site": "Esrange",
+   "elevation": 87.7,
+   "payload_kg": 407.4
+  },
+  {
+   "q_max_ascent_kpa": 134.83050731872868,
+   "qalpha_max_kpa_deg": 11.21796895393075,
+   "burnout_mach": 6.571149771448615,
+   "apogee_km": 250.0,
+   "apogee_sim_km": 255.3034448627429,
+   "flight": "V04",
+   "site": "CLA",
+   "elevation": 83.5,
+   "payload_kg": 350.9
+  },
+  {
+   "q_max_ascent_kpa": 128.91757743412168,
+   "qalpha_max_kpa_deg": 3.661996160323885,
+   "burnout_mach": 6.432206134798436,
+   "apogee_km": 264.4,
+   "apogee_sim_km": 256.65885810104015,
+   "flight": "V05",
+   "site": "Esrange",
+   "elevation": 87.9,
+   "payload_kg": 372.0
+  },
+  {
+   "q_max_ascent_kpa": 129.49233188644982,
+   "qalpha_max_kpa_deg": 3.6574961292334374,
+   "burnout_mach": 6.46102441179923,
+   "apogee_km": 273.0,
+   "apogee_sim_km": 259.2603125345977,
+   "flight": "V06",
+   "site": "Esrange",
+   "elevation": 87.9,
+   "payload_kg": 367.0
+  },
+  {
+   "q_max_ascent_kpa": 129.73447653572487,
+   "qalpha_max_kpa_deg": 8.704810029339189,
+   "burnout_mach": 6.324268579301116,
+   "apogee_km": 242.0,
+   "apogee_sim_km": 239.8669993553087,
+   "flight": "V07",
+   "site": "CLA",
+   "elevation": 85.0,
+   "payload_kg": 391.25
+  },
+  {
+   "q_max_ascent_kpa": 127.66467637316977,
+   "qalpha_max_kpa_deg": 3.6704910703737283,
+   "burnout_mach": 6.369656542062664,
+   "apogee_km": 251.8,
+   "apogee_sim_km": 251.08632769980468,
+   "flight": "V08",
+   "site": "Esrange",
+   "elevation": 87.9,
+   "payload_kg": 383.0
+  },
+  {
+   "q_max_ascent_kpa": 126.46992137874989,
+   "qalpha_max_kpa_deg": 3.8553836492587434,
+   "burnout_mach": 6.310330483917057,
+   "apogee_km": 253.3,
+   "apogee_sim_km": 245.68651098206638,
+   "flight": "V09",
+   "site": "Esrange",
+   "elevation": 87.8,
+   "payload_kg": 393.7
+  },
+  {
+   "q_max_ascent_kpa": 130.06776377706282,
+   "qalpha_max_kpa_deg": 3.8253699035531876,
+   "burnout_mach": 6.489899902884347,
+   "apogee_km": 264.2,
+   "apogee_sim_km": 261.7150162303904,
+   "flight": "V10",
+   "site": "Esrange",
+   "elevation": 87.8,
+   "payload_kg": 362.1
+  }
+ ],
+ "flight_range": {
+  "elevation": [
+   83.5,
+   87.9
+  ],
+  "payload_kg": [
+   350.9,
+   407.4
+  ],
+  "q_max_ascent_kpa": [
+   124.95940656098941,
+   134.83050731872868
+  ],
+  "qalpha_max_kpa_deg": [
+   3.6574961292334374,
+   11.21796895393075
+  ],
+  "burnout_mach": [
+   6.235825572538706,
+   6.571149771448615
+  ],
+  "apogee_km": [
+   236.0,
+   273.0
+  ]
+ },
+ "concepts": {
+  "A": {
+   "elevation": 63.0,
+   "payload_kg": 400.0,
+   "q_max_ascent_kpa": 174.21422184462315,
+   "qalpha_max_kpa_deg": 46.79646499942317,
+   "burnout_mach": 6.431624731471114,
+   "apogee_km": 83.99447881780844
+  },
+  "B": {
+   "elevation": 84.0,
+   "payload_kg": 400.0,
+   "q_max_ascent_kpa": 128.96399528631508,
+   "qalpha_max_kpa_deg": 10.496683149400797,
+   "burnout_mach": 6.285712427881757,
+   "apogee_km": 232.25875579793566
+  },
+  "C": {
+   "elevation": 84.0,
+   "payload_kg": 400.0,
+   "q_max_ascent_kpa": 128.96399528631508,
+   "qalpha_max_kpa_deg": 10.496683149400797,
+   "burnout_mach": 6.285712427881757,
+   "apogee_km": 232.27217609910667
+  },
+  "D": {
+   "elevation": 73.0,
+   "payload_kg": 400.0,
+   "q_max_ascent_kpa": 134.13110914568296,
+   "qalpha_max_kpa_deg": 29.720886948962672,
+   "burnout_mach": 6.423340586530159,
+   "apogee_km": 51.51139954492077
+  }
+ },
+ "inside": {
+  "A": {
+   "elevation": false,
+   "payload_kg": true,
+   "q_max_ascent_kpa": false,
+   "qalpha_max_kpa_deg": false,
+   "burnout_mach": true,
+   "apogee_km": false
+  },
+  "B": {
+   "elevation": true,
+   "payload_kg": true,
+   "q_max_ascent_kpa": true,
+   "qalpha_max_kpa_deg": true,
+   "burnout_mach": true,
+   "apogee_km": false
+  },
+  "C": {
+   "elevation": true,
+   "payload_kg": true,
+   "q_max_ascent_kpa": true,
+   "qalpha_max_kpa_deg": true,
+   "burnout_mach": true,
+   "apogee_km": false
+  },
+  "D": {
+   "elevation": false,
+   "payload_kg": true,
+   "q_max_ascent_kpa": true,
+   "qalpha_max_kpa_deg": false,
+   "burnout_mach": true,
+   "apogee_km": false
+  }
+ }
+}

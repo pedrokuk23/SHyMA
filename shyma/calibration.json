@@ -1,0 +1,26 @@
+{
+  "isp_vsb30": 266.523,
+  "s31_burn": 11.1739,
+  "model": "5dof",
+  "earth_model": "wgs84",
+  "calibration_flight": "V01",
+  "exit_area_m2": [
+    0.1590431280879833,
+    0.1590431280879833
+  ],
+  "target_apogee_km": 236.0,
+  "target_range_km": 189.0,
+  "apogee_check_km": 236.0003046429176,
+  "range_check_km": 188.99988731950637,
+  "jacobian_km_per_s": [
+    [
+      2.6002021223297334,
+      -4.084728026948881
+    ],
+    [
+      1.329308966750716,
+      9.574614856165908
+    ]
+  ],
+  "iterations": 4
+}

@@ -1,0 +1,7 @@
+# The SHyMA model itself needs only the Python (>= 3.9) standard library.
+numpy>=1.24         # statistics, NRLMSISE-00 option
+scipy>=1.10         # statistical tests (Wilcoxon, chi-square, Clopper-Pearson)
+matplotlib>=3.7     # figures
+pytest>=7           # tests/
+pymsis>=0.10        # optional: NRLMSISE-00 site/date atmosphere
+jsbsim>=1.2         # optional: code-to-code verification (jsbsim_ref/)

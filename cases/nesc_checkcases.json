@@ -1,0 +1,24 @@
+{
+ "name": "NASA NESC atmospheric check-cases 5, 9, 10 and 17",
+ "paper_reference": "Table S2, Fig. S1",
+ "function": "nesc",
+ "tab": "val",
+ "runtime": "about 5 s",
+ "slow": false,
+ "params": null,
+ "note": "The workbench compares with a down-sampled copy of the NASA reference data; the bounds below are the paper's acceptance criterion (maximum error below the NASA spread for cases 5, 9 and 10).",
+ "expect": [
+  {
+   "path": "case05.alt.max_abs_err",
+   "max": 5.537469605759725
+  },
+  {
+   "path": "case09.alt.max_abs_err",
+   "max": 1.3014906232974681
+  },
+  {
+   "path": "case10.alt.max_abs_err",
+   "max": 1.2967277248626488
+  }
+ ]
+}

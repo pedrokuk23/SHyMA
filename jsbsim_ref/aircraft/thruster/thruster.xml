@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<fdm_config name="THRUSTER" version="2.0" release="BETA">
+  <fileheader>
+    <description>Point-mass body with a body-axis thrust force, variable propellant point mass and constant drag
+      (code-to-code reference case with propulsion; thrust and propellant mass are set from Python)</description>
+  </fileheader>
+  <metrics>
+    <wingarea unit="M2"> 1.0 </wingarea>
+    <wingspan unit="M"> 1.0 </wingspan>
+    <chord unit="M"> 1.0 </chord>
+    <location name="AERORP" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+    <location name="EYEPOINT" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+    <location name="VRP" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+  </metrics>
+  <mass_balance>
+    <ixx unit="KG*M2"> 1000 </ixx>
+    <iyy unit="KG*M2"> 1000 </iyy>
+    <izz unit="KG*M2"> 1000 </izz>
+    <emptywt unit="KG"> 400 </emptywt>
+    <location name="CG" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+    <pointmass name="propellant">
+      <weight unit="KG"> 600 </weight>
+      <location unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+    </pointmass>
+  </mass_balance>
+  <ground_reactions/>
+  <propulsion/>
+  <external_reactions>
+    <force name="thrust" frame="BODY" unit="LBS">
+      <location unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+      <direction> <x>1</x><y>0</y><z>0</z> </direction>
+    </force>
+  </external_reactions>
+  <flight_control name="none"/>
+  <aerodynamics>
+    <axis name="DRAG">
+      <function name="aero/coefficient/CD">
+        <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <value>0.05</value>
+        </product>
+      </function>
+    </axis>
+  </aerodynamics>
+</fdm_config>

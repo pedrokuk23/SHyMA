@@ -1,0 +1,31 @@
+{
+ "name": "VSB-30: ten flights, V01 calibration, nine held-out",
+ "paper_reference": "Fig. 2, Table S19",
+ "function": "vsb30",
+ "tab": "val",
+ "runtime": "about 15 s",
+ "slow": false,
+ "params": null,
+ "expect": [
+  {
+   "path": "summary.apogee_model_pct.mean",
+   "value": -1.4631961049062154,
+   "tol": 1e-06
+  },
+  {
+   "path": "summary.apogee_model_pct.rms",
+   "value": 2.5690336577938484,
+   "tol": 1e-06
+  },
+  {
+   "path": "summary.apogee_model_pct.max_abs",
+   "value": 5.032852551429419,
+   "tol": 1e-06
+  },
+  {
+   "path": "summary.range_model_km.rms",
+   "value": 19.686274571382665,
+   "tol": 1e-06
+  }
+ ]
+}

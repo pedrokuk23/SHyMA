@@ -1,0 +1,493 @@
+{
+  "isp": 266.523,
+  "s31_burn": 11.1739,
+  "earth_model": "wgs84",
+  "flights": [
+    {
+      "flight": "V01",
+      "site": "CLA",
+      "payload_kg": 392.0,
+      "elevation": 84.0,
+      "azimuth": 45.0,
+      "apogee_actual": 236.0,
+      "apogee_nominal": 254.0,
+      "apogee_model": 236.0005235063797,
+      "range_actual": 189.0,
+      "range_nominal": 188.0,
+      "range_model": 189.00022289927668,
+      "t100_actual": 347.0,
+      "t100_model": 346.0203265549584,
+      "calibration": true,
+      "apogee_err_model_pct": 0.0002218247371581005,
+      "apogee_err_nominal_pct": 7.627118644067797,
+      "range_err_model_km": 0.00022289927667884513,
+      "range_err_nominal_km": -1.0,
+      "t100_err_model_pct": -0.2823266412223667,
+      "mc_sigma_apogee_km": 7.122227249236852,
+      "mc_sigma_range_km": 16.446270754411504,
+      "z_apogee": 7.350318395824999e-05,
+      "z_range": 1.3553180536022442e-05
+    },
+    {
+      "flight": "V02",
+      "site": "Esrange",
+      "payload_kg": 372.2,
+      "elevation": 87.7,
+      "azimuth": 350.0,
+      "apogee_actual": 264.4,
+      "apogee_nominal": 257.0,
+      "apogee_model": 256.2590324248318,
+      "range_actual": 106.0,
+      "range_nominal": 75.0,
+      "range_model": 81.78627164311334,
+      "t100_actual": 380.0,
+      "t100_model": 369.63444649267876,
+      "calibration": false,
+      "apogee_err_model_pct": -3.0790346350863054,
+      "apogee_err_nominal_pct": -2.798789712556724,
+      "range_err_model_km": -24.213728356886662,
+      "range_err_nominal_km": -31.0,
+      "t100_err_model_pct": -2.7277772387687467,
+      "mc_sigma_apogee_km": 7.002504036452163,
+      "mc_sigma_range_km": 18.012742428887748,
+      "z_apogee": -1.1625794905350504,
+      "z_range": -1.3442555153652864
+    },
+    {
+      "flight": "V03",
+      "site": "Esrange",
+      "payload_kg": 407.4,
+      "elevation": 87.7,
+      "azimuth": 350.0,
+      "apogee_actual": 237.0,
+      "apogee_nominal": 248.5,
+      "apogee_model": 239.03981557204762,
+      "range_actual": 74.0,
+      "range_nominal": 72.3,
+      "range_model": 77.24635356980943,
+      "t100_actual": 346.0,
+      "t100_model": 347.9145709750357,
+      "calibration": false,
+      "apogee_err_model_pct": 0.860681675969458,
+      "apogee_err_nominal_pct": 4.852320675105485,
+      "range_err_model_km": 3.246353569809429,
+      "range_err_nominal_km": -1.7000000000000028,
+      "t100_err_model_pct": 0.553344212438064,
+      "mc_sigma_apogee_km": 6.750656277632428,
+      "mc_sigma_range_km": 18.698275708661964,
+      "z_apogee": 0.30216552112219436,
+      "z_range": 0.17361780414359587
+    },
+    {
+      "flight": "V04",
+      "site": "CLA",
+      "payload_kg": 350.9,
+      "elevation": 83.5,
+      "azimuth": 65.0,
+      "apogee_actual": 250.0,
+      "apogee_nominal": 272.0,
+      "apogee_model": 255.3034448627429,
+      "range_actual": 224.7,
+      "range_nominal": 208.5,
+      "range_model": 215.09500481851688,
+      "t100_actual": 365.0,
+      "t100_model": 371.1629691240681,
+      "calibration": false,
+      "apogee_err_model_pct": 2.121377945097163,
+      "apogee_err_nominal_pct": 8.8,
+      "range_err_model_km": -9.604995181483105,
+      "range_err_nominal_km": -16.19999999999999,
+      "t100_err_model_pct": 1.6884846915255143,
+      "mc_sigma_apogee_km": 7.460866487301131,
+      "mc_sigma_range_km": 17.865256665740784,
+      "z_apogee": 0.7108349776490046,
+      "z_range": -0.5376354429825838
+    },
+    {
+      "flight": "V05",
+      "site": "Esrange",
+      "payload_kg": 372.0,
+      "elevation": 87.9,
+      "azimuth": 350.0,
+      "apogee_actual": 264.4,
+      "apogee_nominal": 270.0,
+      "apogee_model": 256.65885810104015,
+      "range_actual": 107.0,
+      "range_nominal": 74.0,
+      "range_model": 74.88003087189568,
+      "t100_actual": 380.0,
+      "t100_model": 370.112717709947,
+      "calibration": false,
+      "apogee_err_model_pct": -2.9278146365203574,
+      "apogee_err_nominal_pct": 2.118003025718617,
+      "range_err_model_km": -32.119969128104316,
+      "range_err_nominal_km": -33.0,
+      "t100_err_model_pct": -2.6019163921192128,
+      "mc_sigma_apogee_km": 6.743768696069733,
+      "mc_sigma_range_km": 19.169142151995437,
+      "z_apogee": -1.1478955236811963,
+      "z_range": -1.6756080618224611
+    },
+    {
+      "flight": "V06",
+      "site": "Esrange",
+      "payload_kg": 367.0,
+      "elevation": 87.9,
+      "azimuth": 350.0,
+      "apogee_actual": 273.0,
+      "apogee_nominal": 270.0,
+      "apogee_model": 259.2603125345977,
+      "range_actual": 78.6,
+      "range_nominal": 74.0,
+      "range_model": 75.50453796689844,
+      "t100_actual": 390.0,
+      "t100_model": 373.29575396392863,
+      "calibration": false,
+      "apogee_err_model_pct": -5.032852551429419,
+      "apogee_err_nominal_pct": -1.098901098901099,
+      "range_err_model_km": -3.0954620331015548,
+      "range_err_nominal_km": -4.599999999999994,
+      "t100_err_model_pct": -4.283140009249069,
+      "mc_sigma_apogee_km": 7.169940984966994,
+      "mc_sigma_range_km": 20.46508124465154,
+      "z_apogee": -1.9162901750809267,
+      "z_range": -0.15125579009907622
+    },
+    {
+      "flight": "V07",
+      "site": "CLA",
+      "payload_kg": 391.25,
+      "elevation": 85.0,
+      "azimuth": 60.0,
+      "apogee_actual": 242.0,
+      "apogee_nominal": 252.7,
+      "apogee_model": 239.8669993553087,
+      "range_actual": 141.0,
+      "range_nominal": 155.6,
+      "range_model": 154.9536899700962,
+      "t100_actual": 354.0,
+      "t100_model": 350.92135970203117,
+      "calibration": false,
+      "apogee_err_model_pct": -0.8814052250790468,
+      "apogee_err_nominal_pct": 4.42148760330578,
+      "range_err_model_km": 13.953689970096207,
+      "range_err_nominal_km": 14.599999999999994,
+      "t100_err_model_pct": -0.8696724005561672,
+      "mc_sigma_apogee_km": 7.057907061908015,
+      "mc_sigma_range_km": 16.77487046702953,
+      "z_apogee": -0.3022143286928836,
+      "z_range": 0.8318210264288918
+    },
+    {
+      "flight": "V08",
+      "site": "Esrange",
+      "payload_kg": 383.0,
+      "elevation": 87.9,
+      "azimuth": 352.5,
+      "apogee_actual": 251.8,
+      "apogee_nominal": 258.0,
+      "apogee_model": 251.08632769980468,
+      "range_actual": 56.0,
+      "range_nominal": 72.0,
+      "range_model": 73.29349723716483,
+      "t100_actual": 365.0,
+      "t100_model": 363.2213056913533,
+      "calibration": false,
+      "apogee_err_model_pct": -0.28342823677336265,
+      "apogee_err_nominal_pct": 2.462271644162029,
+      "range_err_model_km": 17.29349723716483,
+      "range_err_nominal_km": 16.0,
+      "t100_err_model_pct": -0.48731350921827954,
+      "mc_sigma_apogee_km": 6.773929063625899,
+      "mc_sigma_range_km": 18.50260380990158,
+      "z_apogee": -0.10535573866982863,
+      "z_range": 0.9346520854492002
+    },
+    {
+      "flight": "V09",
+      "site": "Esrange",
+      "payload_kg": 393.7,
+      "elevation": 87.8,
+      "azimuth": 352.3,
+      "apogee_actual": 253.3,
+      "apogee_nominal": 256.1,
+      "apogee_model": 245.68651098206638,
+      "range_actual": 104.0,
+      "range_nominal": 75.9,
+      "range_model": 75.39980656873202,
+      "t100_actual": 366.0,
+      "t100_model": 356.4335784569843,
+      "calibration": false,
+      "apogee_err_model_pct": -3.0057201018293056,
+      "apogee_err_nominal_pct": 1.1054086063955828,
+      "range_err_model_km": -28.600193431267982,
+      "range_err_nominal_km": -28.099999999999994,
+      "t100_err_model_pct": -2.6137763778731364,
+      "mc_sigma_apogee_km": 6.5925977773166204,
+      "mc_sigma_range_km": 17.192081081761405,
+      "z_apogee": -1.1548541675224941,
+      "z_range": -1.6635678540167613
+    },
+    {
+      "flight": "V10",
+      "site": "Esrange",
+      "payload_kg": 362.1,
+      "elevation": 87.8,
+      "azimuth": 352.3,
+      "apogee_actual": 264.2,
+      "apogee_nominal": 264.0,
+      "apogee_model": 261.7150162303904,
+      "range_actual": 58.3,
+      "range_nominal": 75.0,
+      "range_model": 79.41467254903806,
+      "t100_actual": 380.0,
+      "t100_model": 376.2916270915971,
+      "calibration": false,
+      "apogee_err_model_pct": -0.9405691785047634,
+      "apogee_err_nominal_pct": -0.075700227100677,
+      "range_err_model_km": 21.114672549038062,
+      "range_err_nominal_km": 16.700000000000003,
+      "t100_err_model_pct": -0.9758876074744492,
+      "mc_sigma_apogee_km": 6.916967063189039,
+      "mc_sigma_range_km": 18.337184481901666,
+      "z_apogee": -0.35925915895049715,
+      "z_range": 1.1514675314456102
+    }
+  ],
+  "stats_held_out": {
+    "apogee_model_pct": {
+      "mean": -1.4631961049062154,
+      "rms": 2.5690336577938484,
+      "sd": 2.239724308960376,
+      "max_abs": 5.032852551429419,
+      "n": 9
+    },
+    "apogee_nominal_pct": {
+      "mean": 2.1984556129032216,
+      "rms": 3.96304811447222,
+      "sd": 3.4973720398580213,
+      "max_abs": 8.8,
+      "n": 9
+    },
+    "range_model_km": {
+      "mean": -4.669570533859455,
+      "rms": 19.686274571382665,
+      "sd": 20.284540473481933,
+      "max_abs": 32.119969128104316,
+      "n": 9
+    },
+    "range_nominal_km": {
+      "mean": -7.477777777777776,
+      "rms": 20.74755675040102,
+      "sd": 20.527102680223635,
+      "max_abs": 33.0,
+      "n": 9
+    },
+    "t100_model_pct": {
+      "mean": -1.3686282923661648,
+      "rms": 2.2233904141151917,
+      "sd": 1.8585240709440582,
+      "max_abs": 4.283140009249069,
+      "n": 9
+    },
+    "apogee_model_pct_CLA": {
+      "mean": 0.619986360009058,
+      "rms": 1.6243644228961227,
+      "sd": 2.123288342064437,
+      "max_abs": 2.121377945097163,
+      "n": 2
+    },
+    "apogee_model_pct_Esrange": {
+      "mean": -2.058391094882008,
+      "rms": 2.7806033738113505,
+      "sd": 2.0192188489913034,
+      "max_abs": 5.032852551429419,
+      "n": 7
+    }
+  },
+  "tests": {
+    "rms_diff_pct": -1.3940144566783714,
+    "rms_diff_ci95": [
+      -3.599917512847919,
+      1.0362753421381845
+    ],
+    "p_model_worse": 0.14775,
+    "wilcoxon_abs_p": 0.5703125
+  },
+  "sphere": {
+    "isp": 266.5740600709912,
+    "b1": 11.202084122930565,
+    "stats_held_out": {
+      "apogee_model_pct": {
+        "mean": -0.8477337944477004,
+        "rms": 2.1459112937783833,
+        "sd": 2.090949074303708,
+        "max_abs": 4.270148284366571,
+        "n": 9
+      },
+      "apogee_nominal_pct": {
+        "mean": 2.1984556129032216,
+        "rms": 3.96304811447222,
+        "sd": 3.4973720398580213,
+        "max_abs": 8.8,
+        "n": 9
+      },
+      "range_model_km": {
+        "mean": -7.745122202635021,
+        "rms": 21.007394639348504,
+        "sd": 20.712053870862867,
+        "max_abs": 36.20137701819985,
+        "n": 9
+      },
+      "range_nominal_km": {
+        "mean": -7.477777777777776,
+        "rms": 20.74755675040102,
+        "sd": 20.527102680223635,
+        "max_abs": 33.0,
+        "n": 9
+      },
+      "t100_model_pct": {
+        "mean": -0.6269410150509721,
+        "rms": 1.710398057390295,
+        "sd": 1.6878854487694868,
+        "max_abs": 3.3678052847521327,
+        "n": 9
+      },
+      "apogee_model_pct_CLA": {
+        "mean": 0.626088925333052,
+        "rms": 1.6245127759887534,
+        "sd": 2.119931327626435,
+        "max_abs": 2.125106742747505,
+        "n": 2
+      },
+      "apogee_model_pct_Esrange": {
+        "mean": -1.2688260000993439,
+        "rms": 2.273019829219935,
+        "sd": 2.0370279853458264,
+        "max_abs": 4.270148284366571,
+        "n": 7
+      }
+    }
+  },
+  "loo": [
+    {
+      "calibrated_on": "V01",
+      "isp": 266.5228853519811,
+      "b1": 11.173880665259212,
+      "apogee_rms_pct": 2.5690872850937843,
+      "apogee_mean_pct": -1.4632915999607836,
+      "range_rms_km": 19.686309261010763
+    },
+    {
+      "calibrated_on": "V02",
+      "isp": 274.11893512719166,
+      "b1": 14.961450538343897,
+      "apogee_rms_pct": 2.186795839684403,
+      "apogee_mean_pct": 1.3502526149623904,
+      "range_rms_km": 39.87621534676947
+    },
+    {
+      "calibrated_on": "V03",
+      "isp": 264.96490737798194,
+      "b1": 10.537579621298837,
+      "apogee_rms_pct": 3.144735478065902,
+      "apogee_mean_pct": -2.356325062761826,
+      "range_rms_km": 21.161112673839988
+    },
+    {
+      "calibrated_on": "V04",
+      "isp": 266.1072054588922,
+      "b1": 12.083904356596834,
+      "apogee_rms_pct": 3.732478966272171,
+      "apogee_mean_pct": -3.326867706683853,
+      "range_rms_km": 19.695464767136322
+    },
+    {
+      "calibrated_on": "V05",
+      "isp": 275.74979111453405,
+      "b1": 16.359863451984857,
+      "apogee_rms_pct": 1.8453833738148075,
+      "apogee_mean_pct": 0.6423953562281963,
+      "range_rms_km": 54.810215935369484
+    },
+    {
+      "calibrated_on": "V06",
+      "isp": 271.5740483366105,
+      "b1": 11.26457133270243,
+      "apogee_rms_pct": 4.781734853813555,
+      "apogee_mean_pct": 4.4048889149823225,
+      "range_rms_km": 19.53994289502042
+    },
+    {
+      "calibrated_on": "V07",
+      "isp": 265.1145509733075,
+      "b1": 9.524440166060007,
+      "apogee_rms_pct": 2.4798204293933335,
+      "apogee_mean_pct": -0.7586421171049362,
+      "range_rms_km": 23.966829842639758
+    },
+    {
+      "calibrated_on": "V08",
+      "isp": 261.2288319977571,
+      "b1": 5.89182394877513,
+      "apogee_rms_pct": 2.7602105063709863,
+      "apogee_mean_pct": -0.6740153605585217,
+      "range_rms_km": 38.8151306272024
+    },
+    {
+      "calibrated_on": "V09",
+      "isp": 275.2646753003968,
+      "b1": 15.818818970512565,
+      "apogee_rms_pct": 2.0311427222002965,
+      "apogee_mean_pct": 1.1221122587272836,
+      "range_rms_km": 48.822389884986094
+    },
+    {
+      "calibrated_on": "V10",
+      "isp": 260.9660776438249,
+      "b1": 4.786943642465998,
+      "apogee_rms_pct": 2.7952587617150773,
+      "apogee_mean_pct": 0.27648322765050654,
+      "range_rms_km": 42.413714730800486
+    }
+  ],
+  "calibration_uncertainty": {
+    "jacobian_km_per_s": [
+      [
+        2.6002021223297334,
+        -4.084728026948881
+      ],
+      [
+        1.329308966750716,
+        9.574614856165908
+      ]
+    ],
+    "sigma_isp_s": 3.2086029693098324,
+    "sigma_b1_s": 1.4341107228233798,
+    "corr": 0.544220876153613,
+    "obs_sigma_apogee_km": 7.122227249236852,
+    "obs_sigma_range_km": 16.446270754411504,
+    "obs_corr": 0.033264702370707964,
+    "diagonal_wind_calibration": {
+      "sigma_isp_s": 3.250284782825877,
+      "sigma_b1_s": 1.502445658319122
+    },
+    "without_residual_profile": {
+      "sigma_isp_s": 2.4033857627598953,
+      "sigma_b1_s": 0.729816523529806
+    }
+  },
+  "normalised_residuals": {
+    "n": 9,
+    "chi2_apogee": 8.50320223148791,
+    "p_apogee": 0.48433519617133625,
+    "chi2_range": 10.61559481467477,
+    "p_range": 0.3029804741280112,
+    "rms_z_apogee": 0.9720083579594885,
+    "rms_z_range": 1.086052731207773,
+    "mean_z_apogee": -0.5706053427068531,
+    "mean_z_range": -0.25341824631320786,
+    "k_wind": 0.9057350514826887,
+    "n_mc_per_flight": 300
+  }
+}

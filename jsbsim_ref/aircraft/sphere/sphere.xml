@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<fdm_config name="SPHERE" version="2.0" release="BETA">
+  <fileheader>
+    <description>Ballistic body with constant drag coefficient (code-to-code reference case)</description>
+  </fileheader>
+  <metrics>
+    <wingarea unit="M2"> 1.0 </wingarea>
+    <wingspan unit="M"> 1.0 </wingspan>
+    <chord unit="M"> 1.0 </chord>
+    <location name="AERORP" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+    <location name="EYEPOINT" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+    <location name="VRP" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+  </metrics>
+  <mass_balance>
+    <ixx unit="KG*M2"> 10 </ixx>
+    <iyy unit="KG*M2"> 10 </iyy>
+    <izz unit="KG*M2"> 10 </izz>
+    <emptywt unit="KG"> 500 </emptywt>
+    <location name="CG" unit="M"> <x>0</x><y>0</y><z>0</z> </location>
+  </mass_balance>
+  <ground_reactions/>
+  <propulsion/>
+  <flight_control name="none"/>
+  <aerodynamics>
+    <axis name="DRAG">
+      <function name="aero/coefficient/CD">
+        <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <value>0.1</value>
+        </product>
+      </function>
+    </axis>
+  </aerodynamics>
+</fdm_config>

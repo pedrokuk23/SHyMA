@@ -1,0 +1,236 @@
+{
+ "free": {
+  "A": {
+   "el": [
+    54,
+    88,
+    2
+   ]
+  },
+  "B": {
+   "el": [
+    54,
+    88,
+    2
+   ]
+  },
+  "C": {
+   "el": [
+    54,
+    88,
+    2
+   ]
+  },
+  "D": {
+   "el": [
+    54,
+    88,
+    2
+   ],
+   "coast": [
+    0,
+    30,
+    3
+   ]
+  }
+ },
+ "dt": 0.05,
+ "max_dwell_400": {
+  "A": {
+   "x": {
+    "el": 62.75
+   },
+   "threshold_s": 6.2369843636980065,
+   "objective_s": 0.0,
+   "steady_s": 2.3642792126278565,
+   "threshold_met": true,
+   "objective_met": false,
+   "impact_range_km": 401.53613892816105,
+   "q_max_ascent_kpa": 175.73415283395246,
+   "feasible": true,
+   "any_feasible": true,
+   "n_eval": 30,
+   "threshold_s_fine": 6.236935490435023
+  },
+  "B": {
+   "x": {
+    "el": 63.75
+   },
+   "threshold_s": 9.210777799290383,
+   "objective_s": 0.0,
+   "steady_s": 2.4698386934261407,
+   "threshold_met": true,
+   "objective_met": false,
+   "impact_range_km": 425.12919310861383,
+   "q_max_ascent_kpa": 169.80940280716433,
+   "feasible": true,
+   "any_feasible": true,
+   "n_eval": 33,
+   "threshold_s_fine": 9.210730632914363
+  },
+  "C": {
+   "x": {
+    "el": 63.0
+   },
+   "threshold_s": 9.281025936800575,
+   "objective_s": 0.0,
+   "steady_s": 2.513178620740689,
+   "threshold_met": true,
+   "objective_met": false,
+   "impact_range_km": 418.1600622608466,
+   "q_max_ascent_kpa": 174.20274457152448,
+   "feasible": true,
+   "any_feasible": true,
+   "n_eval": 32,
+   "threshold_s_fine": 9.28107804523404
+  },
+  "D": {
+   "x": {
+    "el": 73.0,
+    "coast": 24.0
+   },
+   "threshold_s": 14.71704145896004,
+   "objective_s": 0.0,
+   "steady_s": 3.622081911622004,
+   "threshold_met": true,
+   "objective_met": false,
+   "impact_range_km": 345.54956271255725,
+   "q_max_ascent_kpa": 133.79419480901973,
+   "feasible": true,
+   "any_feasible": true,
+   "n_eval": 223,
+   "threshold_s_fine": 14.717004790318313
+  }
+ },
+ "objective_350": {
+  "A": {
+   "x": {
+    "el": 66.25
+   },
+   "threshold_s": 2.335317843495119,
+   "objective_s": 0.0,
+   "steady_s": 0.0,
+   "threshold_met": false,
+   "objective_met": false,
+   "impact_range_km": 489.9352485861034,
+   "q_max_ascent_kpa": 160.6729865581455,
+   "feasible": false,
+   "any_feasible": false,
+   "n_eval": 31
+  },
+  "B": {
+   "x": {
+    "el": 70.5
+   },
+   "threshold_s": 6.222570588308372,
+   "objective_s": 3.3442027199806716,
+   "steady_s": 1.6825550023932578,
+   "threshold_met": true,
+   "objective_met": true,
+   "impact_range_km": 493.39566726793174,
+   "q_max_ascent_kpa": 145.28597019082184,
+   "feasible": true,
+   "any_feasible": true,
+   "n_eval": 32
+  },
+  "C": {
+   "x": {
+    "el": 69.5
+   },
+   "threshold_s": 6.349472840277542,
+   "objective_s": 3.410806136636154,
+   "steady_s": 1.7150142950453073,
+   "threshold_met": true,
+   "objective_met": true,
+   "impact_range_km": 498.60822449161014,
+   "q_max_ascent_kpa": 148.3920800905171,
+   "feasible": true,
+   "any_feasible": true,
+   "n_eval": 34
+  },
+  "D": {
+   "x": {
+    "el": 68.0,
+    "coast": 9.75
+   },
+   "threshold_s": 7.886496882978328,
+   "objective_s": 1.3976262328947016,
+   "steady_s": 3.0582699777000215,
+   "threshold_met": true,
+   "objective_met": false,
+   "impact_range_km": 491.9784646283779,
+   "q_max_ascent_kpa": 143.57401022732122,
+   "feasible": false,
+   "any_feasible": false,
+   "n_eval": 229
+  }
+ },
+ "mass_ceiling": {
+  "A": {
+   "ceiling_kg": 420.0,
+   "infeasible_kg": 430.0,
+   "closest_at_infeasible": {
+    "x": {
+     "el": 67.75
+    },
+    "closest": {
+     "t": 47.2738999999994,
+     "mach": 6.108274703706365,
+     "alt_km": 29.597913455779665,
+     "q_kpa": 33.20135190876018
+    },
+    "violated": []
+   }
+  },
+  "B": {
+   "ceiling_kg": 460.0,
+   "infeasible_kg": 470.0,
+   "closest_at_infeasible": {
+    "x": {
+     "el": 88.0
+    },
+    "closest": {
+     "t": 433.1000000000105,
+     "mach": 6.074285137928631,
+     "alt_km": 23.80212830867525,
+     "q_kpa": 79.12561067811804
+    },
+    "violated": []
+   }
+  },
+  "C": {
+   "ceiling_kg": 470.0,
+   "infeasible_kg": 480.0,
+   "closest_at_infeasible": {
+    "x": {
+     "el": 88.0
+    },
+    "closest": {
+     "t": 427.85000000001065,
+     "mach": 6.052374565087468,
+     "alt_km": 23.518628435647116,
+     "q_kpa": 82.06102882558048
+    },
+    "violated": []
+   }
+  },
+  "D": {
+   "ceiling_kg": 440.0,
+   "infeasible_kg": 450.0,
+   "closest_at_infeasible": {
+    "x": {
+     "el": 70.0,
+     "coast": 5.25
+    },
+    "closest": {
+     "t": 48.423899999999286,
+     "mach": 6.0790339167710385,
+     "alt_km": 27.642945139706136,
+     "q_kpa": 44.12340442354648
+    },
+    "violated": []
+   }
+  }
+ },
+ "cpu_s": 291.33764243125916
+}

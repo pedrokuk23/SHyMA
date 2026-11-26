@@ -1,0 +1,15 @@
+{
+ "name": "Formula checks against independent references",
+ "paper_reference": "Secs. 3-4, Supplementary S1",
+ "function": "checks",
+ "tab": "checks",
+ "runtime": "under 1 s",
+ "slow": false,
+ "params": null,
+ "expect": [
+  {
+   "path": "all_pass",
+   "value": true
+  }
+ ]
+}

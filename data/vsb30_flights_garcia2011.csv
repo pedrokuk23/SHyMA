@@ -1,0 +1,12 @@
+# Source: A. Garcia et al., "VSB-30 sounding rocket: history of flight performance", J. Aerosp. Technol. Manag., 3(3), 325-330, 2011, doi:10.5028/jatm.2011.03032211 (Tables 2-3)
+flight,payload,date,site,payload_kg,elevation_deg,azimuth_deg,apogee_nominal_km,apogee_actual_km,range_nominal_km,range_actual_km,time_above_100km_s
+V01,Cajuana,2004-10-23,CLA,392.0,84.0,45.0,254.0,236.0,188.0,189.0,347
+V02,Texus 42,2005-12-01,Esrange,372.2,87.7,350.0,257.0,264.4,75.0,106.0,380
+V03,Texus 43,2006-05-11,Esrange,407.4,87.7,350.0,248.5,237.0,72.3,74.0,346
+V04,Cuma II,2007-07-19,CLA,350.9,83.5,65.0,272.0,250.0,208.5,224.7,365
+V05,Texus 44,2008-02-07,Esrange,372.0,87.9,350.0,270.0,264.4,74.0,107.0,380
+V06,Texus 45,2008-02-21,Esrange,367.0,87.9,350.0,270.0,273.0,74.0,78.6,390
+V07,Maracati II,2010-12-12,CLA,391.25,85.0,60.0,252.7,242.0,155.6,141.0,354
+V08,Maser 11,2008-05-15,Esrange,383.0,87.9,352.5,258.0,251.8,72.0,56.0,365
+V09,Texus 46,2009-11-22,Esrange,393.7,87.8,352.3,256.1,253.3,75.9,104.0,366
+V10,Texus 47,2009-11-29,Esrange,362.1,87.8,352.3,264.0,264.2,75.0,58.3,380

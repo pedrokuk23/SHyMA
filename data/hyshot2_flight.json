@@ -1,0 +1,12 @@
+{
+  "source": [
+    "N. E. Hass, M. K. Smart, A. Paull, Flight data analysis of HyShot 2, NASA Langley Research Center, 2005, https://ntrs.nasa.gov/citations/20050215040",
+    "M. K. Smart, N. E. Hass, A. Paull, Flight data analysis of the HyShot 2 scramjet flight experiment, AIAA J. 44(10), 2006, doi:10.2514/1.20661"
+  ],
+  "launch": {"date": "2002-07-30", "site": "Woomera, Australia", "vehicle": "Terrier-Orion Mk70"},
+  "payload_mass_kg": 110.0,
+  "apogee_km": 328.27,
+  "t_apogee_s": 278.0,
+  "fpa_end_space_phase_deg": -69.6,
+  "test_window": {"alt_km": [35.0, 29.0], "mach": [7.75, 8.0], "q_kpa": [21.0, 58.5], "duration_s": 3.0, "t_open_s": 537.5}
+}

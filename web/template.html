@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHyMA Reviewer Workbench</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f7f7f5; --panel:#ffffff; --ink:#1d1d1b; --ink2:#5b5b57; --line:#dedcd6; --soft:#efeee9;
+  --accent:#0b5f8a; --ok:#1d7a4a; --bad:#b3261e; --warn:#8a5a00;
+  --cA:#0072B2; --cB:#D55E00; --cC:#CC79A7; --cD:#009E73; --win:#7f7f7f;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root{
+  --bg:#141413; --panel:#1d1d1b; --ink:#ecebe6; --ink2:#a9a8a2; --line:#34332f; --soft:#262623;
+  --accent:#5fb3e0; --ok:#5cc28a; --bad:#ff8a80; --warn:#e0b45c; --win:#9a9a9a;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{padding:20px 16px 8px;max-width:1200px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:17px;margin:0 0 10px}
+h3{font-size:15px;margin:14px 0 6px}
+.sub{color:var(--ink2);margin:0}
+main{max-width:1200px;margin:0 auto;padding:0 16px 40px}
+#status{display:flex;gap:10px;align-items:center;margin:10px 0 14px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--warn);flex:none}
+.dot.ok{background:var(--ok)} .dot.bad{background:var(--bad)}
+nav{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:16px}
+nav button{background:none;border:none;border-bottom:2px solid transparent;padding:8px 12px;color:var(--ink2);font:inherit;cursor:pointer}
+nav button.active{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+section{display:none} section.active{display:block}
+.grid{display:grid;grid-template-columns:minmax(260px,330px) 1fr;gap:16px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
+label{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:6px 0;font-size:14px}
+label span{color:var(--ink2)}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 6px;width:110px}
+input[type=checkbox]{width:auto}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:10px 0;padding:6px 10px}
+legend{color:var(--ink2);font-size:13px;padding:0 4px}
+.row2{display:flex;gap:6px} .row2 input{width:64px}
+button.primary,button.secondary{font:inherit;border-radius:6px;padding:7px 14px;cursor:pointer;margin:8px 6px 0 0}
+button.primary{background:var(--accent);color:#fff;border:1px solid var(--accent)}
+button.secondary{background:none;color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-bottom:12px}
+.kpi{background:var(--soft);border-radius:6px;padding:8px 10px}
+.kpi .k{font-size:12px;color:var(--ink2)} .kpi .v{font-size:18px;font-variant-numeric:tabular-nums}
+.kpi .p{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.match{color:var(--ok)} .mismatch{color:var(--bad)}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:860px){.charts{grid-template-columns:1fr}}
+.chartbox{position:relative;height:280px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink2);font-weight:600}
+.tablewrap{overflow-x:auto}
+.note{font-size:13px;color:var(--ink2)}
+.banner{padding:8px 10px;border-radius:6px;margin:0 0 10px;font-size:14px}
+.banner.ok{background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.banner.info{background:var(--soft)}
+progress{width:100%;height:10px}
+code,.mono{font-family:var(--mono);font-size:12.5px}
+details summary{cursor:pointer;color:var(--ink2);margin:6px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>SHyMA Reviewer Workbench</h1>
+  <p class="sub">Runs the SHyMA source code of the manuscript in your browser (Python via Pyodide). Use the paper's inputs to reproduce its results, or change them to explore.</p>
+</header>
+<main>
+<div class="card" id="casebar" style="margin-bottom:12px">
+  <label style="display:inline-flex;gap:8px;align-items:center;margin-right:16px"><b>Paper test case</b>
+    <select id="case_sel" style="min-width:24em;max-width:100%"><option value="">choose a case…</option></select></label>
+  <label style="display:inline-flex;gap:8px;align-items:center">or a case file (.json) <input type="file" id="case_file" accept=".json,application/json"></label>
+  <div id="case_info" class="note" style="margin-top:6px">A case fills the inputs of one tab with the values used in the paper (the same files as <code>cases/*.json</code> in the repository); press the tab's Run button and compare with the expected values listed here.</div>
+</div>
+<div id="status"><div class="dot" id="dot"></div><div id="statustext">Loading the Python runtime (about 10 MB, downloaded once from jsDelivr; an internet connection is needed)…</div></div>
+<nav id="tabs">
+  <button data-t="nominal" class="active">Nominal concept</button>
+  <button data-t="opt">Optimizer</button>
+  <button data-t="mc">Monte Carlo</button>
+  <button data-t="val">Validation</button>
+  <button data-t="geo">Geometry &amp; stability</button>
+  <button data-t="checks">Formula checks</button>
+  <button data-t="about">About</button>
+</nav>
+
+<!-- ============================ NOMINAL ============================ -->
+<section id="nominal" class="active">
+<div class="grid">
+<div class="card">
+  <h2>Inputs</h2>
+  <label><span>Concept</span><select id="n_concept">
+    <option value="A">A: ascent test</option><option value="B">B: re-entry, separated</option>
+    <option value="C">C: re-entry, captive</option><option value="D">D: boosted, delayed ignition</option></select></label>
+  <label><span>Test-vehicle mass (kg)</span><input id="n_payload" type="number" step="10"></label>
+  <label><span>Launch elevation (°)</span><input id="n_el" type="number" step="0.5"></label>
+  <label><span>Launch azimuth (°)</span><input id="n_az" type="number" step="1"></label>
+  <label><span>Ballistic coefficient β (kg/m²)</span><input id="n_beta" type="number" step="100"></label>
+  <label><span>Leading-edge radius (mm)</span><input id="n_rn" type="number" step="0.5"></label>
+  <label id="lab_dsep"><span>Burnout-to-test delay, A (s)</span><input id="n_dsep" type="number" step="0.5"></label>
+  <label id="lab_coast"><span>Interstage coast, D (s)</span><input id="n_coast" type="number" step="1"></label>
+  <label><span>Test phase</span><select id="n_phase"><option value="default">as in the paper</option><option value="ascent">ascent</option><option value="descent">descent</option><option value="any">ascent or descent</option></select></label>
+  <fieldset><legend>Threshold window</legend>
+    <label><span>Mach</span><span class="row2"><input id="w_m0" type="number" step="0.25"><input id="w_m1" type="number" step="0.25"></span></label>
+    <label><span>Altitude (km)</span><span class="row2"><input id="w_h0" type="number" step="1"><input id="w_h1" type="number" step="1"></span></label>
+    <label><span>q (kPa)</span><span class="row2"><input id="w_q0" type="number" step="5"><input id="w_q1" type="number" step="5"></span></label>
+    <label><span>Minimum dwell τ<sub>min</sub> (s)</span><input id="w_tau" type="number" step="0.5"></label>
+  </fieldset>
+  <fieldset><legend>Objective window (other bounds as threshold)</legend>
+    <label><span>Mach min</span><input id="o_m0" type="number" step="0.05"></label>
+    <label><span>q min (kPa)</span><input id="o_q0" type="number" step="5"></label>
+  </fieldset>
+  <button class="primary" id="n_run" disabled>Run</button>
+  <button class="secondary" id="n_reset">Paper values</button>
+  <p class="note">One run takes about 5–20 s in the browser.</p>
+</div>
+<div>
+  <div id="n_banner"></div>
+  <div id="n_req"></div>
+  <div class="kpis" id="n_kpis"></div>
+  <div class="charts">
+    <div class="chartbox"><canvas id="c_traj"></canvas></div>
+    <div class="chartbox"><canvas id="c_machalt"></canvas></div>
+    <div class="chartbox"><canvas id="c_q"></canvas></div>
+    <div class="chartbox"><canvas id="c_heat"></canvas></div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ============================ OPTIMIZER ============================ -->
+<section id="opt">
+<div class="grid">
+<div class="card">
+  <h2>Find the launch settings</h2>
+  <p class="note">Fix the vehicle and the requirement, choose which settings are free, and the optimizer searches them (grid, then local refinement). The test windows and the test phase are those of the Nominal tab.</p>
+  <label><span>Concept</span><select id="o_concept">
+    <option value="A">A: ascent test</option><option value="B">B: re-entry, separated</option>
+    <option value="C">C: re-entry, captive</option><option value="D" selected>D: boosted, delayed ignition</option></select></label>
+  <label><span>Test-vehicle mass (kg)</span><input id="o_payload" type="number" step="10" value="400"></label>
+  <label><span>Ballistic coefficient β (kg/m²)</span><input id="o_beta" type="number" step="10" value="7462"></label>
+  <label><span>Goal</span><select id="o_goal">
+    <option value="max_dwell">maximize the dwell time</option>
+    <option value="max_steady">maximize the q-band dwell (40–60 kPa)</option>
+    <option value="min_range">minimize the impact range (window met)</option></select></label>
+  <label><span>Window to meet</span><select id="o_target"><option value="threshold">threshold</option><option value="objective">objective</option></select></label>
+  <fieldset><legend>Free settings: min, max, grid step</legend>
+    <label><span><input type="checkbox" id="f_el" checked> Elevation (°)</span><span class="row2"><input id="f_el0" value="54"><input id="f_el1" value="88"><input id="f_el2" value="2"></span></label>
+    <label id="fl_coast"><span><input type="checkbox" id="f_coast" checked> Coast, D (s)</span><span class="row2"><input id="f_co0" value="0"><input id="f_co1" value="30"><input id="f_co2" value="3"></span></label>
+    <label id="fl_dsep"><span><input type="checkbox" id="f_dsep"> Delay, A (s)</span><span class="row2"><input id="f_ds0" value="1"><input id="f_ds1" value="4"><input id="f_ds2" value="1"></span></label>
+    <label><span><input type="checkbox" id="f_az"> Azimuth (°)</span><span class="row2"><input id="f_az0" value="15"><input id="f_az1" value="75"><input id="f_az2" value="15"></span></label>
+  </fieldset>
+  <fieldset><legend>Fixed values (used when not free)</legend>
+    <label><span>Elevation (°)</span><input id="x_el" type="number" value="68"></label>
+    <label><span>Azimuth (°)</span><input id="x_az" type="number" value="45"></label>
+    <label><span>Coast, D (s)</span><input id="x_coast" type="number" value="18"></label>
+    <label><span>Delay, A (s)</span><input id="x_dsep" type="number" value="2"></label>
+  </fieldset>
+  <fieldset><legend>Constraints (optional)</legend>
+    <label><span>Max impact range (km)</span><input id="c_range" type="number" placeholder="none"></label>
+    <label><span>Max ascent q (kPa)</span><input id="c_q" type="number" placeholder="none"></label>
+  </fieldset>
+  <button class="primary" id="o_run" disabled>Optimize</button>
+  <button class="secondary" id="o_load" disabled>Open in Nominal tab</button>
+  <button class="secondary" id="o_paper">Paper case (Table 5)</button>
+  <progress id="o_prog" value="0" max="1" style="display:none"></progress>
+  <p class="note">Each trial takes about 0.5–1 s; a 2-D grid of 18 × 11 points takes 2–4 min. Trials use a 0.05 s step; the best point is then rerun at the paper's 0.01 s step.</p>
+</div>
+<div>
+  <div id="o_banner"></div>
+  <div id="o_best"></div>
+  <div class="charts"><div class="chartbox"><canvas id="c_opt"></canvas></div><div class="chartbox"><canvas id="c_opt2"></canvas></div></div>
+</div>
+</div>
+</section>
+
+<!-- ============================ MONTE CARLO ============================ -->
+<section id="mc">
+<div class="grid">
+<div class="card">
+  <h2>Inputs</h2>
+  <label><span>Concept</span><select id="m_concept">
+    <option value="A">A: ascent test</option><option value="B">B: re-entry, separated</option>
+    <option value="C">C: re-entry, captive</option><option value="D">D: boosted, delayed ignition</option></select></label>
+  <label><span>Number of runs N</span><input id="m_n" type="number" min="2" max="1000" step="10"></label>
+  <label><span>Random seed</span><input id="m_seed" type="number" step="1"></label>
+  <label><span>Residual wind (k<sub>w</sub> calibrated)</span><input id="m_wind" type="checkbox"></label>
+  <label><span>Scale all 1σ by</span><input id="m_scale" type="number" step="0.5" min="0"></label>
+  <details><summary>1σ dispersions (Table 2)</summary><div id="m_sigma"></div></details>
+  <button class="primary" id="m_run" disabled>Run</button>
+  <button class="secondary" id="m_reset">Paper values</button>
+  <button class="secondary" id="m_stop" disabled>Stop</button>
+  <progress id="m_prog" value="0" max="1" style="display:none"></progress>
+  <p class="note">About 1–3 s per run in the browser. With the paper's seed, sequence and dispersions, the first N runs are exactly the first N runs of the paper (Supplementary Fig. S4); N = 1000 reproduces Table 6.</p>
+</div>
+<div>
+  <div id="m_banner"></div>
+  <div class="kpis" id="m_kpis"></div>
+  <div class="charts">
+    <div class="chartbox"><canvas id="c_conv"></canvas></div>
+    <div class="chartbox"><canvas id="c_impact"></canvas></div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ============================ VALIDATION ============================ -->
+<section id="val">
+<div class="card" style="margin-bottom:14px">
+  <h2>VSB-30 held-out validation (Sec. 5.2, Fig. 2, Table S19)</h2>
+  <p class="note">The model, calibrated on flight V01, predicts the apogee and range of the ten VSB-30 flights from payload mass, site, elevation and azimuth. About 1–4 min.</p>
+  <button class="primary" id="v_run" disabled>Run VSB-30 validation</button>
+  <progress id="v_prog" value="0" max="1" style="display:none"></progress>
+  <div id="v_out"></div>
+</div>
+<div class="card">
+  <h2>NASA NESC atmospheric check-cases (Sec. 5.1, Table S2)</h2>
+  <p class="note">Cases 5, 9 and 10 (spheres) and 17 (two-stage rocket). The browser compares altitude (and speed for case 17) with the NASA reference simulations embedded in this file; the paper's table also covers other variables. About 1 min.</p>
+  <button class="primary" id="ne_run" disabled>Run NESC check-cases</button>
+  <progress id="ne_prog" value="0" max="1" style="display:none"></progress>
+  <div id="ne_out"></div>
+</div>
+</section>
+
+<!-- ============================ GEOMETRY ============================ -->
+<section id="geo">
+<div class="grid">
+<div class="card">
+  <h2>Vehicle geometry</h2>
+  <p class="note">Body of revolution: one station per line, <code>x r</code> in metres from the nose tip (straight segments between stations). Fin sets: one per line, <code>name x_le c_root c_tip span x_tip_offset n</code> (exposed root chord, tip chord and span; tip leading edge aft of the root leading edge; n panels equally spaced). The default is the estimated VSB-30 full stack (Supplementary Material, S2-H).</p>
+  <label><span>Body profile (x r)</span></label>
+  <textarea id="g_prof" rows="10" style="width:100%" class="mono" wrap="off"></textarea>
+  <label><span>Fin sets</span></label>
+  <textarea id="g_fins" rows="3" style="width:100%" class="mono" wrap="off"></textarea>
+  <label><span>Reference diameter (m)</span><input id="g_dref" type="number" step="0.001"></label>
+  <label><span>Centre of gravity from nose tip (m)</span><input id="g_xcg" type="number" step="0.01"></label>
+  <label><span>Mach numbers</span><input id="g_mach" type="text"></label>
+  <label><span>Fin thickness ratio t/c</span><input id="g_tc" type="number" step="0.005" value="0.03"></label>
+  <label><span>Fin leading-edge radius (mm)</span><input id="g_rle" type="number" step="0.5" value="3"></label>
+  <label><span>Nozzle exit / base area</span><input id="g_ear" type="number" step="0.05" value="0.72"></label>
+  <label><span>Reynolds number per metre</span><input id="g_re" type="number" step="1e6" value="5000000"></label>
+  <button class="primary" id="g_run" disabled>Compute derivatives</button>
+  <button id="g_reset">VSB-30 default</button>
+</div>
+<div class="card">
+  <h2>Stability derivatives and drag</h2>
+  <p class="note">Component build-up as in NASA TM X-287 (Walker and Wolowicz, 1960): slender-body theory for the body, Diederich (subsonic) and linear theory (supersonic) for the fins, Pitts–Nielsen–Kaattari interference (NACA Rep. 1307), strip estimate of C<sub>mq</sub> (per qd/2V). Per radian, referred to the reference area and diameter. Small angle of attack, no shock interference.</p>
+  <div id="g_svg"></div>
+  <div id="g_out"></div>
+</div>
+</div>
+</section>
+
+<!-- ============================ CHECKS ============================ -->
+<section id="checks">
+<div class="card">
+  <h2>Formula checks</h2>
+  <p class="note">Each line evaluates a model function of the code and compares it with an independent reference value (standard tables or a hand evaluation of the equation in the paper).</p>
+  <button class="primary" id="k_run" disabled>Run checks</button>
+  <div id="k_out"></div>
+</div>
+</section>
+
+<!-- ============================ ABOUT ============================ -->
+<section id="about">
+<div class="card">
+  <h2>About this file</h2>
+  <p>This page embeds the SHyMA package (<code>shyma/</code>), the case-study, Monte Carlo and validation scripts, the VSB-30 flight table, the reference data of the NESC check-cases needed here, and the published results used for comparison. It runs them with Pyodide, a Python interpreter compiled to WebAssembly. Nothing is sent to a server.</p>
+  <p>Differences from running the repository with CPython: runs are serial instead of parallel; the Clopper–Pearson interval uses a pure-Python inverse incomplete beta function instead of SciPy (identical to 10<sup>−10</sup>); the bootstrap of the ellipse axis skips an unused term. Floating-point results can differ from the published ones in the last digits.</p>
+  <p>To reproduce every number of the paper, run <code>./run_all.sh</code> in the repository. The SHA-256 hashes below can be compared with <code>HASHES.sha256</code>.</p>
+  <h3>Embedded files</h3>
+  <div class="tablewrap"><table id="manifest"></table></div>
+</div>
+</section>
+</main>
+
+<script type="application/octet-stream" id="repozip">__ZIP_B64__</script>
+<script>
+const BUILD = __BUILD_INFO__;
+const CASES = __CASES__;
+const COL = {A:"#0072B2",B:"#D55E00",C:"#CC79A7",D:"#009E73"};
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const $ = id => document.getElementById(id);
+let DEF = null, busy = false, stopFlag = false;
+
+/* ------------------------------ worker ------------------------------ */
+const WORKER_SRC = `
+self.shymaProgress = s => postMessage({type:"progress", data:s});
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js");
+let py = null;
+onmessage = async (e) => {
+  const m = e.data;
+  try {
+    if (m.cmd === "init") {
+      py = await loadPyodide({indexURL:"https://cdn.jsdelivr.net/pyodide/v0.26.4/full/"});
+      const bin = Uint8Array.from(atob(m.zip), c => c.charCodeAt(0));
+      py.unpackArchive(bin.buffer, "zip", {extractDir:"/repo"});
+      py.runPython("import sys; sys.path.insert(0, '/repo/web'); import webdriver");
+      postMessage({type:"ready", version: py.version, defaults: py.runPython("webdriver.defaults()")});
+      return;
+    }
+    py.globals.set("ARG", m.arg === undefined ? null : JSON.stringify(m.arg));
+    const out = py.runPython("webdriver." + m.cmd + "(ARG) if ARG is not None else webdriver." + m.cmd + "()");
+    postMessage({type:"result", id:m.id, data: out});
+  } catch (err) {
+    postMessage({type:"error", id:m.id, error: String(err)});
+  }
+};`;
+let worker, pending = {}, nextId = 1, onProgress = null;
+function startWorker(){
+  worker = new Worker(URL.createObjectURL(new Blob([WORKER_SRC], {type:"text/javascript"})));
+  worker.onmessage = (e) => {
+    const m = e.data;
+    if (m.type === "progress") { if (onProgress) onProgress(JSON.parse(m.data)); return; }
+    if (m.type === "ready") { DEF = JSON.parse(m.defaults); ready(m.version); return; }
+    if (m.type === "result") { pending[m.id].res(JSON.parse(m.data)); delete pending[m.id]; return; }
+    if (m.type === "error") {
+      if (m.id && pending[m.id]) { pending[m.id].rej(m.error); delete pending[m.id]; }
+      else setStatus("Could not start Python: " + m.error, "bad");
+    }
+  };
+  worker.postMessage({cmd:"init", zip: $("repozip").textContent.trim()});
+}
+function call(cmd, arg){ return new Promise((res, rej) => { const id = nextId++; pending[id] = {res, rej}; worker.postMessage({cmd, arg, id}); }); }
+function setStatus(t, s){ $("statustext").textContent = t; $("dot").className = "dot " + (s || ""); }
+function ready(v){
+  setStatus("Ready (Pyodide " + v + "). SHyMA " + BUILD.code_revision + ", embedded-code fingerprint " + BUILD.code_hash + ".", "ok");
+  document.querySelectorAll("button.primary").forEach(b => b.disabled = false);
+  resetNominal(); resetMC();
+  call("geometry_defaults").then(d => { GEO_DEF = d; geoFill(d); }).catch(() => {});
+}
+function setBusy(b){ busy = b; document.querySelectorAll("button.primary").forEach(x => x.disabled = b); }
+
+/* ------------------------------ tabs ------------------------------ */
+document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#tabs button").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll("section").forEach(x => x.classList.remove("active"));
+  b.classList.add("active"); $(b.dataset.t).classList.add("active");
+});
+
+/* ------------------------------ helpers ------------------------------ */
+const fmt = (x, d=2) => (x === null || x === undefined || Number.isNaN(x)) ? "–" : Number(x).toFixed(d);
+function kpi(label, val, unit, pub, d=2){
+  let p = "";
+  if (pub !== undefined && pub !== null && val !== null && val !== undefined) {
+    const diff = Math.abs(val - pub), tol = Math.max(1e-6, Math.abs(pub) * 1e-6, Math.pow(10, -d) / 2);
+    p = `<div class="p">paper ${fmt(pub, d)} ${unit} <span class="${diff <= tol ? "match" : "mismatch"}">${diff <= tol ? "✓ match" : "Δ " + fmt(val - pub, d+1)}</span></div>`;
+  }
+  return `<div class="kpi"><div class="k">${label}</div><div class="v">${fmt(val, d)} <small>${unit}</small></div>${p}</div>`;
+}
+const charts = {};
+function chart(id, cfg){
+  if (charts[id]) charts[id].destroy();
+  const ink2 = css("--ink2"), line = css("--line");
+  const userPlugins = (cfg.options || {}).plugins || {};
+  cfg.options = Object.assign({responsive:true, maintainAspectRatio:false, animation:false}, cfg.options || {});
+  cfg.options.plugins = Object.assign({legend:{labels:{color:ink2, boxWidth:14, font:{size:11}}}, title:{display:true, color:css("--ink"), font:{size:13, weight:"600"}, text: cfg.title || ""}}, userPlugins);
+  for (const ax of ["x","y"]) {
+    cfg.options.scales = cfg.options.scales || {};
+    cfg.options.scales[ax] = Object.assign({ticks:{color:ink2}, grid:{color:line}, title:{display:true, color:ink2}}, cfg.options.scales[ax] || {});
+  }
+  charts[id] = new Chart($(id), cfg);
+}
+const pts = (xs, ys) => xs.map((x, i) => ({x, y: ys[i]}));
+
+/* ------------------------------ nominal ------------------------------ */
+function resetNominal(){
+  const P = DEF.paper, c = $("n_concept").value;
+  $("n_payload").value = P.payload; $("n_el").value = P.nominal_el[c]; $("n_az").value = P.azimuth;
+  $("n_beta").value = P.beta_tv; $("n_rn").value = P.rn_le * 1000; $("n_dsep").value = P.dsep; $("n_coast").value = P.coast_D;
+  [$("w_m0").value, $("w_m1").value] = P.window.mach; [$("w_h0").value, $("w_h1").value] = P.window.alt_km;
+  [$("w_q0").value, $("w_q1").value] = P.window.q_kpa; $("w_tau").value = P.window.min_duration;
+  $("o_m0").value = P.objective.mach_min; $("o_q0").value = P.objective.q_min; $("n_phase").value = "default";
+  conceptFields();
+}
+function conceptFields(){ const c = $("n_concept").value; $("lab_dsep").style.display = c === "A" ? "" : "none"; $("lab_coast").style.display = c === "D" ? "" : "none"; }
+$("n_concept").onchange = () => { if (DEF) { $("n_el").value = DEF.paper.nominal_el[$("n_concept").value]; } conceptFields(); };
+$("n_reset").onclick = () => DEF && resetNominal();
+const num = id => parseFloat($(id).value);
+$("n_run").onclick = async () => {
+  const c = $("n_concept").value;
+  const arg = {concept:c, payload:num("n_payload"), el:num("n_el"), az:num("n_az"), beta:num("n_beta"),
+    rn_le:num("n_rn")/1000, dsep:num("n_dsep"), coast:num("n_coast"),
+    window:{mach:[num("w_m0"), num("w_m1")], alt_km:[num("w_h0"), num("w_h1")], q_kpa:[num("w_q0"), num("w_q1")], min_duration:num("w_tau")},
+    objective:{mach_min:num("o_m0"), q_min:num("o_q0")}, phase:$("n_phase").value};
+  setBusy(true); $("n_banner").innerHTML = '<div class="banner info">Running concept ' + c + '…</div>';
+  const t0 = performance.now();
+  try { renderNominal(c, await call("nominal", arg), (performance.now() - t0) / 1000); }
+  catch (e) { $("n_banner").innerHTML = '<div class="banner info">Error: ' + e + '</div>'; }
+  setBusy(false);
+};
+function renderNominal(c, r, secs){
+  const s = r.summary, P = r.published || {};
+  $("n_banner").innerHTML = r.is_paper_case
+    ? `<div class="banner ok">Paper inputs for concept ${c}: each value is compared with the published one (Table 4 and Sec. 6). Run time ${secs.toFixed(1)} s.</div>`
+    : `<div class="banner info">Modified inputs: no published values to compare. Run time ${secs.toFixed(1)} s.</div>`;
+  const st = (s.window_stations || {}).CLA || {};
+  const hasWin = s.t_window !== null && s.t_window !== undefined, fh = s.flight_heating || {};
+  const pst = ((P.window_stations || {}).CLA) || {};
+  const pv = k => r.is_paper_case ? P[k] : undefined;
+  $("n_kpis").innerHTML = [
+    kpi("Threshold dwell", s.window_s, "s", pv("window_s")), kpi("Objective dwell", s.objective_s, "s", pv("objective_s")),
+    kpi("q-band dwell (40–60 kPa)", s.steady_s, "s", pv("steady_s")), kpi("Apogee", s.apogee_km, "km", pv("apogee_km"), 1),
+    kpi("Impact range", s.impact_range_km, "km", pv("impact_range_km"), 1), kpi("Max q, ascent", s.q_max_ascent_kpa, "kPa", pv("q_max_ascent_kpa"), 1),
+    kpi("Burnout Mach", s.burnout_mach, "", pv("burnout_mach")), kpi("Window entry FPA", s.window_fpa_entry_deg, "°", pv("window_fpa_entry_deg"), 1),
+    ...(hasWin ? [
+      kpi("Hot-wall q̇, leading edge (window)", s.qdot_le_hw_window_MW, "MW/m²", pv("qdot_le_hw_window_MW"), 3),
+      kpi("Wall temperature T<sub>w</sub> (window)", s.T_le_window_K, "K", pv("T_le_window_K"), 0),
+      kpi("Total temperature T<sub>0</sub> (window)", s.T0_window_K, "K", pv("T0_window_K"), 0),
+      kpi("Heat load Q (exposure to window end)", s.Q_le_to_window_end_MJ, "MJ/m²", pv("Q_le_to_window_end_MJ")),
+      kpi("CLA min elevation in test", st.el_min, "°", r.is_paper_case ? pst.el_min : undefined, 1),
+      kpi("CLA min link margin in test", st.margin_min_db, "dB", r.is_paper_case ? pst.margin_min_db : undefined, 1)
+    ] : [
+      kpi("Peak hot-wall q̇, leading edge (flight)", fh.qdot_hw_peak_MW, "MW/m²", undefined, 3),
+      kpi("Peak wall temperature T<sub>w</sub> (flight)", fh.T_w_peak_K, "K", undefined, 0),
+      kpi("Peak total temperature T<sub>0</sub> (flight)", fh.T0_peak_K, "K", undefined, 0),
+      kpi("Heat load Q (exposure to impact)", fh.Q_to_impact_MJ, "MJ/m²", undefined, 2)
+    ])
+  ].join("") + (hasWin ? "" : `<div class="note" style="grid-column:1/-1">No test window: the heating values are flight peaks after the leading edge is exposed (t = ${fmt(fh.t_expose,1)} s; peak at t = ${fmt(fh.t_peak,1)} s, Mach ${fmt(fh.mach_at_peak,2)}, ${fmt(fh.alt_at_peak_km,1)} km). Tracking and link are evaluated only during a test.</div>`);
+  renderReq(s.diagnostics, s);
+  const pr = s.profile, col = COL[c], [t0w, t1w] = s.window_t || [null, null];
+  const inWin = (arr) => pr.t.map((t, i) => (t0w !== null && t >= t0w && t <= t1w) ? arr[i] : null);
+  const other = (s.window_passes || []).filter(q => !q.counted || q.t1 < (t0w ?? -1) || q.t0 > (t1w ?? -1));
+  const inOther = (i) => other.some(q => pr.t[i] >= q.t0 && pr.t[i] <= q.t1);
+  chart("c_traj", {type:"scatter", title:"Altitude versus downrange", data:{datasets:[
+      {label:"trajectory", data:pts(pr.downrange_km, pr.alt_km), showLine:true, borderColor:col, pointRadius:0, borderWidth:1.6},
+      {label:"in threshold window", data:pts(pr.downrange_km, inWin(pr.alt_km)), showLine:true, borderColor:css("--ink"), pointRadius:0, borderWidth:4, spanGaps:false},
+      {label:"other window crossing (not counted)", data:pr.t.map((t, i) => inOther(i) ? {x:pr.downrange_km[i], y:pr.alt_km[i]} : {x:null, y:null}), showLine:true, borderColor:css("--ink2"), borderDash:[3,3], pointRadius:0, borderWidth:4, spanGaps:false}]},
+    options:{scales:{x:{title:{text:"Downrange from CLA (km)"}}, y:{title:{text:"Altitude (km)"}}}}});
+  const near = pr.t.map((t, i) => pr.alt_km[i] <= 60 ? i : -1).filter(i => i >= 0);
+  const poly = (p) => p.map(([m, h]) => ({x:m, y:h}));
+  const band = near.filter(i => pr.alt_km[i] >= 10).map(i => pr.mach[i]);
+  const mMin = Math.max(0, Math.min(4, Math.floor(band.length ? Math.min(...band) : 4)));
+  chart("c_machalt", {type:"scatter", title:"Mach–altitude near the window", data:{datasets:[
+      {label:"threshold window", data:poly(r.polygons.threshold), showLine:true, fill:true, backgroundColor:"rgba(127,127,127,.18)", borderColor:"rgba(127,127,127,.6)", pointRadius:0, borderWidth:1},
+      {label:"objective window", data:poly(r.polygons.objective), showLine:true, fill:true, backgroundColor:"rgba(127,127,127,.38)", borderColor:"rgba(127,127,127,.8)", pointRadius:0, borderWidth:1},
+      {label:"trajectory", data:near.map(i => ({x:pr.mach[i], y:pr.alt_km[i]})), showLine:true, borderColor:col, pointRadius:0, borderWidth:1.6},
+      {label:"in threshold window", data:pr.t.map((t, i) => (t0w !== null && t >= t0w && t <= t1w) ? {x:pr.mach[i], y:pr.alt_km[i]} : {x:null, y:null}), showLine:true, borderColor:css("--ink"), pointRadius:0, borderWidth:4, spanGaps:false},
+      {label:"other crossing (not counted)", data:pr.t.map((t, i) => inOther(i) ? {x:pr.mach[i], y:pr.alt_km[i]} : {x:null, y:null}), showLine:true, borderColor:css("--ink2"), borderDash:[3,3], pointRadius:0, borderWidth:4, spanGaps:false}]},
+    options:{scales:{x:{min:mMin, max:9, title:{text:"Mach number"}}, y:{min:10, max:50, title:{text:"Altitude (km)"}}}}});
+  chart("c_q", {type:"scatter", title:"Dynamic pressure and Mach number", data:{datasets:[
+      {label:"q (kPa)", data:pts(pr.t, pr.q_kpa), showLine:true, borderColor:col, pointRadius:0, borderWidth:1.5, yAxisID:"y"},
+      {label:"Mach", data:pts(pr.t, pr.mach), showLine:true, borderColor:css("--ink2"), borderDash:[5,4], pointRadius:0, borderWidth:1.3, yAxisID:"y1"}]},
+    options:{scales:{x:{title:{text:"Time (s)"}}, y:{title:{text:"q (kPa)"}}, y1:{position:"right", title:{display:true, text:"Mach", color:css("--ink2")}, ticks:{color:css("--ink2")}, grid:{drawOnChartArea:false}}}}});
+  chart("c_heat", {type:"scatter", title:"Leading edge: cold-wall flux and wall temperature", data:{datasets:[
+      {label:"cold-wall q̇ (MW/m²)", data:pts(pr.t, pr.qdot_le_MW), showLine:true, borderColor:col, pointRadius:0, borderWidth:1.5, yAxisID:"y"},
+      {label:"T_w (K)", data:pts(pr.t, pr.T_le_K), showLine:true, borderColor:css("--ink2"), borderDash:[5,4], pointRadius:0, borderWidth:1.3, yAxisID:"y1"}]},
+    options:{scales:{x:{title:{text:"Time (s)"}}, y:{title:{text:"q̇ (MW/m²)"}}, y1:{position:"right", title:{display:true, text:"T_w (K)", color:css("--ink2")}, ticks:{color:css("--ink2")}, grid:{drawOnChartArea:false}}}}});
+}
+
+function renderReq(d, s){
+  const box = (title, x) => {
+    const nev = x.items.filter(i => i.ok === null || i.ok === undefined).length;
+    const head = (x.met ? `<span class="match">✓ met by the model</span>` : `<span class="mismatch">✗ violated</span>`) + (nev ? ` <span style="opacity:.7">(${nev} not evaluated)</span>` : "");
+    const elig = `${x.phase === "any" ? "any phase" : x.phase}${x.t_min !== null ? ", t ≥ " + fmt(x.t_min,1) + " s" : ""}${x.powered ? ", booster thrust allowed" : ", booster off"}`;
+    const rows = x.items.map(i => `<tr><td>${i.name}</td><td>${i.ok === null || i.ok === undefined ? '<span title="not evaluated (assumption)">–</span>' : (i.ok ? '<span class="match">✓</span>' : '<span class="mismatch">✗</span>')}</td><td style="text-align:left">${i.text}</td></tr>`).join("");
+    const cl = x.closest ? `<p class="note">${x.met ? "Values at the sample deepest inside the window" : "Closest eligible point to the window"}: t = ${fmt(x.closest.t,1)} s, Mach ${fmt(x.closest.mach,2)}, ${fmt(x.closest.alt_km,1)} km, ${fmt(x.closest.q_kpa,1)} kPa.</p>` : "";
+    return `<div class="card"><h3 style="margin-top:0">${title}: ${head}</h3><p class="note">Eligible samples: ${elig}.</p><table>${rows}</table>${cl}</div>`;
+  };
+  const ps = (s && s.window_passes) || [];
+  const prow = ps.map(q => `<tr><td>${q.phase}</td><td>${fmt(q.t0,1)}–${fmt(q.t1,1)} s</td><td>${fmt(q.duration,2)} s</td><td style="text-align:left">${q.counted ? '<span class="match">counts as test</span>' : '<span class="mismatch">not a test</span>'}${q.reasons.length ? ": " + q.reasons.join("; ") : ""}</td></tr>`).join("");
+  const ptab = `<div class="card" style="margin-bottom:12px"><h3 style="margin-top:0">Crossings of the threshold window (test phase: ${s ? s.test_phase : ""})</h3>${ps.length ? `<table><tr><th>Phase</th><th>Time</th><th>Duration</th><th style="text-align:left">Status</th></tr>${prow}</table>` : '<p class="note">The trajectory never enters the Mach–altitude–q box.</p>'}<p class="note">A crossing counts as a test only in the concept's test phase, with the booster off (except Concept D) and after the vehicle is ready. Durations here are sample-based; the dwell above uses interpolated boundaries.</p></div>`;
+  $("n_req").innerHTML = `<div class="charts" style="margin-bottom:12px">${box("Threshold window", d.threshold)}${box("Objective window", d.objective)}</div>` + ptab;
+}
+
+/* ------------------------------ optimizer ------------------------------ */
+let OPT = null;
+function optFields(){ const c = $("o_concept").value; $("fl_coast").style.display = c === "D" ? "" : "none"; $("fl_dsep").style.display = c === "A" ? "" : "none"; }
+$("o_concept").onchange = optFields; optFields();
+const rng3 = (a, b, c) => [num(a), num(b), num(c)];
+$("o_run").onclick = async () => {
+  const c = $("o_concept").value;
+  const free = {el: $("f_el").checked ? rng3("f_el0","f_el1","f_el2") : null,
+                coast: (c === "D" && $("f_coast").checked) ? rng3("f_co0","f_co1","f_co2") : null,
+                dsep: (c === "A" && $("f_dsep").checked) ? rng3("f_ds0","f_ds1","f_ds2") : null,
+                az: $("f_az").checked ? rng3("f_az0","f_az1","f_az2") : null};
+  const cons = {}; if ($("c_range").value !== "") cons.range_max = num("c_range"); if ($("c_q").value !== "") cons.q_max = num("c_q");
+  const arg = {concept:c, payload:num("o_payload"), beta:num("o_beta"), el:num("x_el"), az:num("x_az"), coast:num("x_coast"), dsep:num("x_dsep"),
+    rn_le:num("n_rn")/1000, phase:$("n_phase").value,
+    window:{mach:[num("w_m0"), num("w_m1")], alt_km:[num("w_h0"), num("w_h1")], q_kpa:[num("w_q0"), num("w_q1")], min_duration:num("w_tau")},
+    objective:{mach_min:num("o_m0"), q_min:num("o_q0")}, target:$("o_target").value, objective_fn:$("o_goal").value, free, constraints:cons};
+  setBusy(true); $("o_load").disabled = true;
+  const prog = $("o_prog"); prog.style.display = ""; prog.value = 0;
+  let nfeas = 0, bestDwell = 0;
+  onProgress = p => { if (p.kind !== "opt") return; prog.max = p.n; prog.value = p.i; if (p.extra.feasible) nfeas++; bestDwell = Math.max(bestDwell, p.extra.dwell);
+    $("o_banner").innerHTML = `<div class="banner info">Trial ${p.i} (grid ${p.n}): ${Object.entries(p.extra.x).map(([k, v]) => k + " = " + fmt(v, 2)).join(", ")}; feasible trials so far ${nfeas}; longest dwell so far ${fmt(bestDwell, 2)} s</div>`; };
+  const t0 = performance.now();
+  try { OPT = await call("optimize", arg); renderOpt(c, OPT, (performance.now() - t0) / 1000); $("o_load").disabled = false; }
+  catch (e) { $("o_banner").innerHTML = '<div class="banner info">Error: ' + e + '</div>'; }
+  onProgress = null; prog.style.display = "none"; setBusy(false);
+};
+const VLAB = {el:"Elevation (°)", coast:"Interstage coast (s)", dsep:"Burnout-to-test delay (s)", az:"Azimuth (°)"};
+function renderOpt(c, r, secs){
+  const b = r.best, bi = r.best_inputs, f = r.final.summary, tgt = $("o_target").value;
+  const goal = $("o_goal").selectedOptions[0].text;
+  let pap = "";
+  if (r.paper) { const pv = r.paper, mine = b[tgt], ref = tgt === "threshold" ? pv.threshold_s : pv.objective_s;
+    const same = Math.abs(mine - ref) < 1e-6 && Object.entries(pv.x).every(([k, v]) => Math.abs(b.x[k] - v) < 1e-9);
+    pap = ` Paper settings (Table 5): ${Object.entries(pv.x).map(([k, v]) => k + " " + fmt(v, 2)).join(", ")}, ${fmt(ref, 2)} s — <span class="${same ? "match" : "mismatch"}">${same ? "✓ identical" : "different"}</span>.`; }
+  if (r.any_feasible) {
+    $("o_banner").innerHTML = `<div class="banner ok">Solution found for concept ${c} (${goal}, ${tgt} window): ${r.n_eval} trials, ${secs.toFixed(0)} s.${pap}</div>`;
+  } else {
+    const why = f.diagnostics[tgt].items.filter(i => i.ok === false).map(i => `<li><b>${i.name}</b>: ${i.text}</li>`).join("");
+    $("o_banner").innerHTML = `<div class="banner info"><b>No solution in the searched range</b> (${r.n_eval} trials, ${secs.toFixed(0)} s). The setting below is the closest to the ${tgt} window; what is missing there:<ul style="margin:4px 0 0 18px;padding:0">${why}</ul>Try a lighter vehicle, wider ranges, another concept or relaxed constraints.${pap}</div>`;
+  }
+  const rows = [["Concept", c], ["Test-vehicle mass", fmt(bi.payload, 0) + " kg"], ["Elevation", fmt(bi.el, 2) + "°"], ["Azimuth", fmt(bi.az, 1) + "°"]];
+  if (c === "D") rows.push(["Interstage coast", fmt(bi.coast, 2) + " s"]);
+  if (c === "A") rows.push(["Burnout-to-test delay", fmt(bi.dsep, 2) + " s"]);
+  rows.push(["Threshold dwell (0.01 s step)", fmt(f.window_s, 2) + " s"], ["Objective dwell", fmt(f.objective_s, 2) + " s"], ["q-band dwell (40–60 kPa)", fmt(f.steady_s, 2) + " s"],
+    ["Impact range", fmt(f.impact_range_km, 1) + " km"], ["Max ascent q", fmt(f.q_max_ascent_kpa, 1) + " kPa"], ["Apogee", fmt(f.apogee_km, 1) + " km"]);
+  if (f.window_mach) rows.push(["Window entry → exit", `Mach ${fmt(f.window_mach[0],2)} → ${fmt(f.window_mach[1],2)}, ${fmt(f.window_alt_km[0],1)} → ${fmt(f.window_alt_km[1],1)} km`]);
+  $("o_best").innerHTML = `<div class="card" style="margin-bottom:12px"><h3 style="margin-top:0">${r.any_feasible ? "Best setting" : "Closest setting"}</h3><table>${rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("")}</table></div>`;
+  const ev = r.evaluations, ax = r.axes, val = e => e[tgt];
+  if (ax.length === 1) {
+    const k = ax[0], pts1 = ev.map(e => ({x:e.x[k], y:val(e)})).sort((a, b) => a.x - b.x);
+    chart("c_opt", {type:"scatter", title:"Dwell in the " + tgt + " window", data:{datasets:[
+      {label:"trials", data:pts1, showLine:true, borderColor:COL[c], backgroundColor:COL[c], pointRadius:2, borderWidth:1.2},
+      {label:"best", data:[{x:b.x[k], y:val(b)}], pointRadius:7, pointStyle:"rectRot", borderWidth:2, borderColor:css("--ink"), backgroundColor:css("--bad")}]},
+      options:{scales:{x:{title:{text:VLAB[k]}}, y:{title:{text:"Dwell (s)"}}}}});
+  } else if (ax.length >= 2) {
+    const [kx, ky] = ax, mx = Math.max(1e-9, ...ev.map(val));
+    chart("c_opt", {type:"scatter", title:"Dwell in the " + tgt + " window (darker = longer; × = not met)", data:{datasets:[
+      {label:"window met", data:ev.filter(e => e[tgt + "_met"]).map(e => ({x:e.x[kx], y:e.x[ky], d:val(e)})), pointRadius:6,
+        backgroundColor:ctx => { const d = ctx.raw ? ctx.raw.d / mx : 0; return `rgba(0,158,115,${0.15 + 0.85 * d})`; }, borderWidth:0},
+      {label:"not met", data:ev.filter(e => !e[tgt + "_met"]).map(e => ({x:e.x[kx], y:e.x[ky]})), pointStyle:"crossRot", pointRadius:4, borderColor:css("--ink2")},
+      {label:"best", data:[{x:b.x[kx], y:b.x[ky]}], pointRadius:8, pointStyle:"rectRot", borderWidth:2, borderColor:css("--ink"), backgroundColor:css("--bad")}]},
+      options:{scales:{x:{title:{text:VLAB[kx]}}, y:{title:{text:VLAB[ky]}}}, plugins:{tooltip:{callbacks:{label:ctx => `${VLAB[kx]} ${ctx.raw.x}, ${VLAB[ky]} ${ctx.raw.y}${ctx.raw.d !== undefined ? ", dwell " + fmt(ctx.raw.d, 2) + " s" : ""}`}}}}});
+  }
+  const pr = f.profile, near = pr.t.map((t, i) => pr.alt_km[i] <= 60 ? i : -1).filter(i => i >= 0), poly = p => p.map(([m, h]) => ({x:m, y:h}));
+  const [t0w, t1w] = f.window_t || [null, null];
+  chart("c_opt2", {type:"scatter", title:"Best trajectory, Mach–altitude", data:{datasets:[
+    {label:"threshold window", data:poly(r.final.polygons.threshold), showLine:true, fill:true, backgroundColor:"rgba(127,127,127,.18)", borderColor:"rgba(127,127,127,.6)", pointRadius:0, borderWidth:1},
+    {label:"objective window", data:poly(r.final.polygons.objective), showLine:true, fill:true, backgroundColor:"rgba(127,127,127,.38)", borderColor:"rgba(127,127,127,.8)", pointRadius:0, borderWidth:1},
+    {label:"trajectory", data:near.map(i => ({x:pr.mach[i], y:pr.alt_km[i]})), showLine:true, borderColor:COL[c], pointRadius:0, borderWidth:1.6},
+    {label:"test", data:pr.t.map((t, i) => (t0w !== null && t >= t0w && t <= t1w) ? {x:pr.mach[i], y:pr.alt_km[i]} : {x:null, y:null}), showLine:true, borderColor:css("--ink"), pointRadius:0, borderWidth:4, spanGaps:false}]},
+    options:{scales:{x:{min:0, max:9, title:{text:"Mach number"}}, y:{min:10, max:50, title:{text:"Altitude (km)"}}}}});
+}
+$("o_paper").onclick = () => {
+  $("o_payload").value = 400; $("o_beta").value = 7462; $("o_goal").value = "max_dwell"; $("o_target").value = "threshold";
+  [$("f_el").checked, $("f_coast").checked, $("f_dsep").checked, $("f_az").checked] = [true, true, false, false];
+  [$("f_el0").value, $("f_el1").value, $("f_el2").value, $("f_co0").value, $("f_co1").value, $("f_co2").value] = [54, 88, 2, 0, 30, 3];
+  [$("x_az").value, $("x_dsep").value, $("x_coast").value] = [45, 2, 18]; $("c_range").value = ""; $("c_q").value = ""; $("n_phase").value = "default";
+};
+$("o_load").onclick = () => {
+  if (!OPT) return; const bi = OPT.best_inputs;
+  $("n_concept").value = $("o_concept").value; conceptFields();
+  $("n_payload").value = bi.payload; $("n_el").value = +bi.el.toFixed(3); $("n_az").value = bi.az; $("n_beta").value = bi.beta;
+  $("n_coast").value = +bi.coast.toFixed(3); $("n_dsep").value = +bi.dsep.toFixed(3);
+  document.querySelector('#tabs button[data-t="nominal"]').click(); $("n_run").click();
+};
+
+/* ------------------------------ Monte Carlo ------------------------------ */
+const SIGLAB = {imp:"Total impulse (rel.)", burn:"Burn time (rel.)", dry:"Dry mass (rel.)", pl:"Test-vehicle mass (rel.)", cd:"Drag coefficient (rel.)",
+  rho:"Pressure/density scale (rel.)", dT:"Temperature offset (K)", el:"Elevation (°)", az:"Azimuth (°)", beta:"Ballistic coeff. (rel.)", dsep:"Separation delay, A (s)", coast:"Interstage coast, D (s)"};
+function resetMC(){
+  const P = DEF.paper;
+  $("m_n").value = 100; $("m_seed").value = P.seed; $("m_wind").checked = true; $("m_scale").value = 1;
+  $("m_sigma").innerHTML = Object.entries(P.sigma).map(([k, v]) => `<label><span>${SIGLAB[k] || k}</span><input data-sig="${k}" type="number" step="any" value="${v}"></label>`).join("");
+}
+$("m_reset").onclick = () => DEF && resetMC();
+$("m_stop").onclick = () => { stopFlag = true; worker.terminate(); setStatus("Run stopped; restarting Python…"); $("m_stop").disabled = true; setBusy(false); for (const k in pending) delete pending[k]; startWorker(); };
+$("m_run").onclick = async () => {
+  const c = $("m_concept").value, n = Math.max(2, Math.min(1000, parseInt($("m_n").value)));
+  const sigma = {}; document.querySelectorAll("[data-sig]").forEach(i => sigma[i.dataset.sig] = parseFloat(i.value));
+  const arg = {concept:c, n, seed:parseInt($("m_seed").value), wind:$("m_wind").checked, scale:num("m_scale"), sigma};
+  setBusy(true); $("m_stop").disabled = false; stopFlag = false;
+  const prog = $("m_prog"); prog.style.display = ""; prog.max = n; prog.value = 0;
+  let met = 0, running = [];
+  onProgress = (p) => { if (p.kind !== "mc") return; prog.value = p.i; if (p.extra.met) met++; running.push(met / p.i);
+    $("m_banner").innerHTML = `<div class="banner info">Concept ${c}: run ${p.i} of ${n}, running P(window) = ${(met / p.i).toFixed(3)}</div>`; };
+  const t0 = performance.now();
+  try { renderMC(c, await call("montecarlo", arg), running, (performance.now() - t0) / 1000); }
+  catch (e) { if (!stopFlag) $("m_banner").innerHTML = '<div class="banner info">Error: ' + e + '</div>'; }
+  onProgress = null; prog.style.display = "none"; $("m_stop").disabled = true; setBusy(false);
+};
+function ellipsePts(e, k){
+  const a = k * e.sigma_major_km, b = k * e.sigma_minor_km, th = e.angle_from_east_deg * Math.PI / 180, out = [];
+  for (let i = 0; i <= 120; i++) { const u = 2 * Math.PI * i / 120, x = a * Math.cos(u), y = b * Math.sin(u);
+    out.push({x: x * Math.cos(th) - y * Math.sin(th), y: x * Math.sin(th) + y * Math.cos(th)}); }
+  return out;
+}
+function renderMC(c, r, running, secs){
+  const R = r.result, P = r.published, n = R.n, cmp = r.comparison;
+  let ban = `Concept ${c}, N = ${n}, ${secs.toFixed(0)} s.`;
+  if (r.paper_like && cmp) {
+    const ok = cmp.max_abs_diff_s !== null && cmp.max_abs_diff_s < 1e-6;
+    ban = `<div class="banner ${ok ? "ok" : "info"}">${ban} Paper seed, sequence and dispersions: the dwell times of these ${cmp.n_compared} runs ${ok ? "are identical to" : "differ from"} the first ${cmp.n_compared} runs of the paper (max |Δ| = ${cmp.max_abs_diff_s.toExponential(1)} s). ${n === 1000 ? "Compare with Table 6." : "The paper's values below are for N = 1000."}</div>`;
+  } else ban = `<div class="banner info">${ban} Modified settings: the paper's values (N = 1000) are shown for reference only.</div>`;
+  $("m_banner").innerHTML = ban;
+  const full = r.paper_like && n === 1000;
+  const pv = (x) => full ? x : undefined;
+  const ci = (v) => v ? `[${fmt(v[0], 3)}, ${fmt(v[1], 3)}]` : "–";
+  $("m_kpis").innerHTML = [
+    kpi("P(window), 95% CI " + ci(R.p_window_ci95), R.p_window, "", r.paper_like && cmp ? cmp.paper_prefix_p_window : undefined, 3),
+    kpi("P(objective)", R.p_objective, "", pv(P.p_objective), 3),
+    kpi("P(window and link)", R.p_window_link, "", pv(P.p_window_link), 3),
+    kpi("Dwell, 5th percentile", R.window_p05, "s", pv(P.window_p05)),
+    kpi("Dwell, median", R.window_p50, "s", pv(P.window_p50)),
+    kpi("Dwell, 95th percentile", R.window_p95, "s", pv(P.window_p95)),
+    kpi("Apogee, mean", R.apogee_mean, "km", pv(P.apogee_mean), 1),
+    kpi("Impact 1σ major axis", R.ellipse.sigma_major_km, "km", pv(P.ellipse.sigma_major_km), 2),
+    kpi("Impact 3σ radius (Gaussian)", R.ellipse.r3sig_gauss_km, "km", pv(P.ellipse.r3sig_gauss_km), 1),
+  ].join("");
+  const tau = DEF.paper.window.min_duration, pw = P.window_samples.slice(0, Math.max(n, 2)), pr = [];
+  let m = 0; for (let i = 0; i < pw.length; i++) { if (pw[i] >= tau) m++; pr.push({x:i + 1, y:m / (i + 1)}); }
+  const ymin = Math.min(...running, ...pr.map(q => q.y));
+  chart("c_conv", {type:"scatter", title:"Running P(window)", data:{datasets:[
+      {label:"paper, first " + pw.length + " runs", data:pr, showLine:true, borderColor:css("--ink"), borderDash:[4,3], pointRadius:0, borderWidth:1.2, order:0},
+      {label:"this run", data:running.map((y, i) => ({x:i + 1, y})), showLine:true, borderColor:COL[c], pointRadius:0, borderWidth:3, order:1}]},
+    options:{scales:{x:{type:"linear", min:1, max:Math.max(n, 2), title:{text:"Number of runs"}}, y:{min:Math.max(0, Math.floor((ymin - 0.02) * 50) / 50), max:1.0, title:{text:"P(τ ≥ τmin)"}}}}});
+  const [xs, ys] = R.xy, [mx, my] = R.ellipse.mean_xy;
+  chart("c_impact", {type:"scatter", title:"Impact points relative to the mean", data:{datasets:[
+      {label:"impacts", data:xs.map((x, i) => ({x:x - mx, y:ys[i] - my})), pointRadius:2, backgroundColor:COL[c] + "99", borderWidth:0},
+      {label:"3σ ellipse", data:ellipsePts(R.ellipse, 3), showLine:true, pointRadius:0, borderColor:css("--ink"), borderWidth:1.2},
+      {label:"1σ ellipse", data:ellipsePts(R.ellipse, 1), showLine:true, pointRadius:0, borderColor:css("--ink"), borderDash:[2,3], borderWidth:1.2}]},
+    options:{aspectRatio:1, scales:{x:{min:-80, max:80, title:{text:"East (km)"}}, y:{min:-80, max:80, title:{text:"North (km)"}}}}});
+}
+
+/* ------------------------------ validation ------------------------------ */
+$("v_run").onclick = async () => {
+  setBusy(true); const prog = $("v_prog"); prog.style.display = ""; prog.max = 10; prog.value = 0;
+  onProgress = p => { if (p.kind === "vsb30") { prog.max = p.n; prog.value = p.i; } };
+  try {
+    const r = await call("vsb30");
+    const P = {}; (r.published.flights || []).forEach(f => P[f.flight] = f);
+    let rows = r.records.map(f => { const p = P[f.flight] || {};
+      const d = (a, b) => (b === undefined ? "–" : `<span class="${Math.abs(a - b) < 0.05 ? "match" : "mismatch"}">${fmt(b, 1)}</span>`);
+      return `<tr><td>${f.flight}${f.calibration ? " (cal.)" : ""}</td><td>${f.site}</td><td>${fmt(f.apogee_actual,1)}</td><td>${fmt(f.apogee_model,1)}</td><td>${d(f.apogee_model, p.apogee_model)}</td><td>${fmt(f.apogee_err_model_pct,2)}</td><td>${fmt(f.apogee_err_nominal_pct,2)}</td><td>${fmt(f.range_actual,1)}</td><td>${fmt(f.range_model,1)}</td><td>${d(f.range_model, p.range_model)}</td></tr>`; }).join("");
+    const S = r.summary, PS = r.published.stats_held_out || {};
+    const g = (o, k) => o && o[k] ? o[k] : {};
+    $("v_out").innerHTML = `<h3>Held-out statistics (nine flights)</h3><div class="kpis">
+      ${kpi("Apogee RMS error, model", S.apogee_model_pct.rms, "%", g(PS, "apogee_model_pct").rms)}
+      ${kpi("Apogee mean error, model", S.apogee_model_pct.mean, "%", g(PS, "apogee_model_pct").mean)}
+      ${kpi("Apogee RMS error, operators", S.apogee_nominal_pct.rms, "%", g(PS, "apogee_nominal_pct").rms)}
+      ${kpi("Range RMS error, model", S.range_model_km.rms, "km", g(PS, "range_model_km").rms, 1)}</div>
+      <div class="tablewrap"><table><tr><th>Flight</th><th>Site</th><th>Apogee flown (km)</th><th>Model (km)</th><th>Paper model (km)</th><th>Model error (%)</th><th>Operators' error (%)</th><th>Range flown (km)</th><th>Model (km)</th><th>Paper model (km)</th></tr>${rows}</table></div>`;
+  } catch (e) { $("v_out").textContent = "Error: " + e; }
+  onProgress = null; prog.style.display = "none"; setBusy(false);
+};
+$("ne_run").onclick = async () => {
+  setBusy(true); const prog = $("ne_prog"); prog.style.display = ""; prog.max = 4; prog.value = 0;
+  onProgress = p => { if (p.kind === "nesc") prog.value = p.i; };
+  try {
+    const r = await call("nesc");
+    const names = {case05:"5: dropped sphere", case09:"9: eastward cannonball", case10:"10: northward cannonball", case17:"17: two-stage rocket (from 20 s)"};
+    let rows = "";
+    for (const k of ["case05","case09","case10","case17"]) {
+      const a = r[k].alt, pa = (r[k].published || {}).alt_m || {};
+      rows += `<tr><td>${names[k]}</td><td>altitude (m)</td><td>${fmt(a.max_abs_err,2)}</td><td>${fmt(pa.max_abs_err,2)}</td><td>${fmt(a.max_spread,2)}</td><td>${fmt(a.final_err,2)}</td><td>${a.max_abs_err <= a.max_spread ? '<span class="match">within spread</span>' : '<span class="mismatch">outside spread</span>'}</td></tr>`;
+      if (r[k].speed) { const s = r[k].speed;
+        rows += `<tr><td></td><td>speed (m/s)</td><td>${fmt(s.max_abs_err,2)}</td><td>–</td><td>${fmt(s.max_spread,2)}</td><td>${fmt(s.final_err,2)}</td><td>${s.max_abs_err <= s.max_spread ? '<span class="match">within spread</span>' : '<span class="mismatch">outside spread</span>'}</td></tr>`; }
+    }
+    $("ne_out").innerHTML = `<div class="tablewrap"><table><tr><th>Case</th><th>Variable</th><th>Max |error| vs NASA median</th><th>Paper</th><th>NASA spread (max−min)</th><th>Final error</th><th></th></tr>${rows}</table></div>
+      <p class="note">Errors are SHyMA minus the median of the NASA reference simulations, at 0.5 s (cases 5–10) or 2 s (case 17) intervals. The paper column uses the full NASA data; this file embeds a down-sampled copy, so case 17 can differ slightly.</p>`;
+  } catch (e) { $("ne_out").textContent = "Error: " + e; }
+  onProgress = null; prog.style.display = "none"; setBusy(false);
+};
+
+/* ------------------------------ geometry & stability ------------------------------ */
+let GEO_DEF = null;
+function geoFill(d){
+  $("g_prof").value = d.profile.map(p => p[0].toFixed(4) + " " + p[1].toFixed(4)).join("\n");
+  $("g_fins").value = d.fins.map(f => [f.name, f.x_le, f.c_root, f.c_tip, f.span, f.x_tip_offset, f.n].map((v, i) => i === 0 || i === 6 ? v : Number(v).toFixed(4)).join(" ")).join("\n");
+  $("g_dref").value = d.d_ref; $("g_xcg").value = Number(d.x_cg).toFixed(3); $("g_mach").value = d.machs.join(", ");
+}
+function geoRead(){
+  const prof = $("g_prof").value.trim().split(/\n+/).map(l => l.trim().split(/[\s,;]+/).map(Number)).filter(v => v.length >= 2 && isFinite(v[0]) && isFinite(v[1]));
+  const fins = $("g_fins").value.trim().split(/\n+/).filter(l => l.trim()).map(l => { const v = l.trim().split(/[\s,;]+/);
+    return {name: v[0], x_le: +v[1], c_root: +v[2], c_tip: +v[3], span: +v[4], x_tip_offset: +v[5], n: +(v[6] || 4)}; });
+  return {profile: prof, fins, d_ref: +$("g_dref").value, x_cg: +$("g_xcg").value, t_c: +$("g_tc").value,
+          r_le: +$("g_rle").value / 1000, exit_ratio: +$("g_ear").value, re_per_m: +$("g_re").value,
+          machs: $("g_mach").value.split(/[\s,;]+/).map(Number).filter(x => isFinite(x) && x >= 0)};
+}
+function geoSvg(p, r){
+  const L = Math.max(...p.profile.map(q => q[0])), R = Math.max(...p.profile.map(q => q[1]), ...p.fins.map(f => 0)) ;
+  const smax = Math.max(R, ...p.fins.map(f => f.span + R));
+  const W = 640, sc = (W - 20) / L, H = 2 * smax * sc + 20, y0 = H / 2;
+  const X = x => 10 + x * sc, Y = y => y0 - y * sc;
+  let path = "M" + p.profile.map(q => X(q[0]).toFixed(1) + "," + Y(q[1]).toFixed(1)).join(" L") + " " + p.profile.slice().reverse().map(q => X(q[0]).toFixed(1) + "," + Y(-q[1]).toFixed(1)).join(" L") + " Z";
+  let fins = "";
+  for (const f of p.fins) {
+    const rb = p.profile.reduce((a, q) => q[0] <= f.x_le + f.c_root / 2 ? q[1] : a, R);
+    for (const sgn of [1, -1]) fins += `<path d="M${X(f.x_le)},${Y(sgn * rb)} L${X(f.x_le + f.x_tip_offset)},${Y(sgn * (rb + f.span))} L${X(f.x_le + f.x_tip_offset + f.c_tip)},${Y(sgn * (rb + f.span))} L${X(f.x_le + f.c_root)},${Y(sgn * rb)} Z" fill="none" stroke="currentColor"/>`;
+  }
+  const r0 = r.rows[0];
+  const mark = (x, lab, dy) => `<line x1="${X(x)}" x2="${X(x)}" y1="${y0 - 8}" y2="${y0 + 8}" stroke="currentColor" stroke-width="2"/><text x="${X(x) + 3}" y="${y0 + dy}" font-size="11" fill="currentColor">${lab}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W}px"><path d="${path}" fill="none" stroke="currentColor"/>${fins}${mark(p.x_cg, "CG", -10)}${mark(r0.x_cp, "CP, Mach " + r0.mach, 20)}</svg>`;
+}
+$("g_reset").onclick = () => { if (GEO_DEF) geoFill(GEO_DEF); };
+$("g_run").onclick = async () => {
+  setBusy(true);
+  try {
+    if (!GEO_DEF) { GEO_DEF = await call("geometry_defaults"); if (!$("g_prof").value.trim()) geoFill(GEO_DEF); }
+    const p = geoRead();
+    const r = await call("stability", p);
+    $("g_svg").innerHTML = geoSvg(p, r);
+    $("g_out").innerHTML = `<p class="note">Length ${fmt(r.length, 2)} m, reference area ${fmt(r.s_ref, 4)} m², volume ${fmt(r.volume, 3)} m³, wetted area ${fmt(r.wetted, 2)} m²; ` +
+      r.fins.map(f => `${f.name}: panel area ${fmt(f.area, 3)} m², aspect ratio ${fmt(f.aspect, 2)}, LE sweep ${fmt(f.sweep_le_deg, 1)}°`).join("; ") + `.</p>` +
+      `<div class="tablewrap"><table><tr><th>Mach</th><th>C<sub>Nα</sub> (1/rad)</th><th>x<sub>CP</sub> (m)</th><th>Static margin (cal)</th><th>C<sub>mα</sub> (1/rad)</th><th>C<sub>mq</sub></th></tr>` +
+      r.rows.map(x => `<tr><td>${x.mach}</td><td>${fmt(x.cn_alpha, 2)}</td><td>${fmt(x.x_cp, 3)}</td><td>${fmt(x.margin_cal, 2)}</td><td>${fmt(x.cm_alpha, 2)}</td><td>${fmt(x.cmq, 0)}</td></tr>`).join("") + `</table></div>` +
+      `<h3>Zero-lift drag (referred to the reference area)</h3><p class="note">Van Driest II friction, shock-expansion and Taylor–Maccoll body wave drag, diamond-section fin wave drag, leading-edge bluntness, base-drag correlation reduced by the nozzle exit while a motor burns; wave drag blended to zero between Mach 1.5 and 0.8.</p>` +
+      `<div class="tablewrap"><table><tr><th>Mach</th><th>Friction</th><th>Wave</th><th>Base (coast)</th><th>C<sub>D</sub> coast</th><th>C<sub>D</sub> powered</th></tr>` +
+      r.rows.map(x => `<tr><td>${x.mach}</td><td>${fmt(x.cd_friction, 3)}</td><td>${fmt(x.cd_wave, 3)}</td><td>${fmt(x.cd_base, 3)}</td><td>${fmt(x.cd_off, 3)}</td><td>${fmt(x.cd_on, 3)}</td></tr>`).join("") + `</table></div>` +
+      `<h3>Components at Mach ${r.rows[0].mach}</h3><div class="tablewrap"><table><tr><th>Component</th><th>C<sub>Nα</sub> (1/rad)</th><th>x<sub>CP</sub> (m)</th></tr>` +
+      r.components.map(c => `<tr><td style="text-align:left">${c.name}</td><td>${fmt(c.cn_alpha, 3)}</td><td>${fmt(c.x_cp, 3)}</td></tr>`).join("") + `</table></div>`;
+  } catch (e) { $("g_out").textContent = "Error: " + e; }
+  setBusy(false);
+};
+
+/* ------------------------------ checks ------------------------------ */
+$("k_run").onclick = async () => {
+  setBusy(true);
+  try {
+    const r = await call("checks");
+    $("k_out").innerHTML = `<div class="tablewrap"><table><tr><th>Check</th><th>SHyMA</th><th>Reference</th><th>Tolerance</th><th>Unit</th><th>Reference source</th><th></th></tr>` +
+      r.map(c => `<tr><td>${c.name}</td><td class="mono">${Number(c.value).toPrecision(8)}</td><td class="mono">${Number(c.reference).toPrecision(8)}</td><td>${c.tolerance}</td><td>${c.unit}</td><td style="text-align:left">${c.source}</td><td>${c.pass ? '<span class="match">pass</span>' : '<span class="mismatch">fail</span>'}</td></tr>`).join("") + `</table></div>`;
+  } catch (e) { $("k_out").textContent = "Error: " + e; }
+  setBusy(false);
+};
+
+/* ------------------------------ about ------------------------------ */
+$("manifest").innerHTML = "<tr><th>File</th><th>Bytes</th><th>SHA-256</th></tr>" +
+  BUILD.files.map(f => `<tr><td class="mono">${f.file}</td><td>${f.bytes}</td><td class="mono" style="text-align:left">${f.sha256}</td></tr>`).join("");
+
+startWorker();
+
+/* ------------------------------ paper test cases ------------------------------ */
+function setv(id, v){ const e = $(id); if (!e || v === undefined || v === null) return; if (e.type === "checkbox") e.checked = !!v; else e.value = v; }
+function setWindow(p){
+  if (p.window){ [$("w_m0").value, $("w_m1").value] = p.window.mach; [$("w_h0").value, $("w_h1").value] = p.window.alt_km;
+    [$("w_q0").value, $("w_q1").value] = p.window.q_kpa; $("w_tau").value = p.window.min_duration; }
+  if (p.objective){ $("o_m0").value = p.objective.mach_min; $("o_q0").value = p.objective.q_min; }
+  if (p.rn_le !== undefined) $("n_rn").value = p.rn_le * 1000;
+  if (p.phase) $("n_phase").value = p.phase;
+}
+function showTab(t){ const b = document.querySelector('#tabs button[data-t="' + t + '"]'); if (b) b.click(); }
+function applyCase(cs){
+  const p = cs.params || {};
+  if (cs.function === "nominal"){
+    setv("n_concept", p.concept); conceptFields();
+    setv("n_payload", p.payload); setv("n_el", p.el); setv("n_az", p.az); setv("n_beta", p.beta); setv("n_dsep", p.dsep); setv("n_coast", p.coast);
+    setWindow(p); showTab("nominal");
+  } else if (cs.function === "optimize"){
+    setv("o_concept", p.concept); $("o_concept").dispatchEvent(new Event("change"));
+    setv("o_payload", p.payload); setv("o_beta", p.beta); setv("o_target", p.target); setv("o_goal", p.objective_fn);
+    setv("x_el", p.el); setv("x_az", p.az); setv("x_coast", p.coast); setv("x_dsep", p.dsep);
+    const fr = p.free || {}, map = {el:["f_el","f_el0","f_el1","f_el2"], coast:["f_coast","f_co0","f_co1","f_co2"], dsep:["f_dsep","f_ds0","f_ds1","f_ds2"], az:["f_az","f_az0","f_az1","f_az2"]};
+    for (const [k, ids] of Object.entries(map)){ $(ids[0]).checked = !!fr[k]; if (fr[k]) { $(ids[1]).value = fr[k][0]; $(ids[2]).value = fr[k][1]; $(ids[3]).value = fr[k][2]; } }
+    const cons = p.constraints || {}; $("c_range").value = cons.range_max ?? ""; $("c_q").value = cons.q_max ?? "";
+    setWindow(p); showTab("opt");
+  } else if (cs.function === "montecarlo"){
+    if (DEF) resetMC();
+    setv("m_concept", p.concept); setv("m_n", p.n); setv("m_seed", p.seed); setv("m_wind", p.wind); setv("m_scale", p.scale);
+    document.querySelectorAll("[data-sig]").forEach(i => { if (p.sigma && p.sigma[i.dataset.sig] !== undefined) i.value = p.sigma[i.dataset.sig]; });
+    showTab("mc");
+  } else if (cs.function === "vsb30" || cs.function === "nesc"){ showTab("val"); }
+  else if (cs.function === "checks"){ showTab("checks"); }
+  const ex = (cs.expect || []).map(e => `<li><code>${e.path}</code>: ${"max" in e ? "≤ " + e.max : (typeof e.value === "number" ? (+e.value.toPrecision(8)) : e.value)}</li>`).join("");
+  const run = {nominal:"Run", optimize:"Optimize", montecarlo:"Run", vsb30:"Run VSB-30 validation", nesc:"Run NESC check-cases", checks:"Run checks"}[cs.function];
+  $("case_info").innerHTML = `<b>${cs.name}</b> (${cs.paper_reference}; ${cs.runtime}). Inputs loaded: press <b>${run}</b>. Expected:<ul style="margin:4px 0 0 18px;padding:0">${ex}</ul>${cs.note ? '<span>' + cs.note + '</span>' : ""}`;
+}
+CASES.forEach((cs, i) => { const o = document.createElement("option"); o.value = i; o.textContent = cs.name + (cs.slow ? " (slow)" : ""); $("case_sel").appendChild(o); });
+$("case_sel").onchange = () => { const i = $("case_sel").value; if (i !== "") applyCase(CASES[+i]); };
+$("case_file").onchange = async (ev) => { const f = ev.target.files[0]; if (!f) return;
+  try { applyCase(JSON.parse(await f.text())); } catch (e) { $("case_info").textContent = "Could not read the case file: " + e; } };
+</script>
+</body>
+</html>

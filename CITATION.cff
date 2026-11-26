@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use SHyMA, please cite the software and the accompanying article."
+title: "SHyMA: Sounding-rocket Hypersonic Mission Analysis"
+type: software
+version: "2.4"
+date-released: "2026-11-26"
+license: MIT
+repository-code: "https://github.com/pedrokuk23/SHyMA"
+authors:
+  - family-names: "Kukulka de Albuquerque"
+    given-names: "Pedro"
+    affiliation: "Aeronautics Institute of Technology (ITA); Institute for Advanced Studies (IEAv), DCTA"
+    orcid: "https://orcid.org/0009-0007-0275-9183"
+  - family-names: "Galembeck"
+    given-names: "Lucas"
+    affiliation: "Aeronautics Institute of Technology (ITA); Institute for Advanced Studies (IEAv), DCTA"
+    orcid: "https://orcid.org/0009-0002-1000-1069"
+preferred-citation:
+  type: article
+  title: "Requirement-driven pre-Phase A mission analysis of sounding-rocket-boosted scramjet flight experiments"
+  authors:
+    - family-names: "Kukulka de Albuquerque"
+      given-names: "Pedro"
+    - family-names: "Galembeck"
+      given-names: "Lucas"
+  journal: "Acta Astronautica"
+  status: submitted
+  year: 2026

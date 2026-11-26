@@ -5,6 +5,7 @@ type: software
 version: "2.4"
 date-released: "2026-11-26"
 license: MIT
+doi: "10.5281/zenodo.24568162"
 repository-code: "https://github.com/pedrokuk23/SHyMA"
 authors:
   - family-names: "Kukulka de Albuquerque"

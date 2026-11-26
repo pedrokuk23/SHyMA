@@ -1,5 +1,7 @@
 # SHyMA — Sounding-rocket Hypersonic Mission Analysis
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24568161.svg)](https://doi.org/10.5281/zenodo.24568161)
+
 SHyMA is a framework of computationally light engineering models for the **pre-Phase A mission analysis of hypersonic (scramjet) flight experiments boosted by sounding rockets**. It chains these analyses:
 
 - a stakeholder test window (Mach number, altitude, dynamic pressure, dwell time);
@@ -132,7 +134,7 @@ Results were produced with Python 3.13 on Linux and checked on macOS (Apple M5 P
 
 ## Archive
 
-Each release of this repository is archived on Zenodo (see the DOI badge and `CITATION.cff`). Version 2.4 accompanies the Acta Astronautica submission; all its result files were computed in one run of `run_all.sh` with the released code, and the table, figure and section references of the paper test cases and of the workbench follow the submitted manuscript.
+Each release of this repository is archived on Zenodo: concept DOI [10.5281/zenodo.24568161](https://doi.org/10.5281/zenodo.24568161) (all versions), version 2.4 DOI [10.5281/zenodo.24568162](https://doi.org/10.5281/zenodo.24568162). Version 2.4 accompanies the Acta Astronautica submission; all its result files were computed in one run of `run_all.sh` with the released code, and the table, figure and section references of the paper test cases and of the workbench follow the submitted manuscript.
 
 ## Authors
 

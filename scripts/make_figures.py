@@ -177,9 +177,9 @@ def fig_nominal():
     axb = fig.add_subplot(gs[1, 0])
     axc = fig.add_subplot(gs[1, 1], sharey=axb)
     N = d["nominal"]
-    labs = {"A": "A: ascent test, %.0f°" % N["A"]["elevation"], "B": "B: re-entry, separated, %.0f°" % N["B"]["elevation"],
-            "C": "C: re-entry, captive, %.0f°" % N["C"]["elevation"],
-            "D": "D: delayed ignition, %.0f°, %.0f s coast" % (N["D"]["elevation"], d.get("coast_D", 24))}
+    labs = {"A": "A: ascent test, %g°" % N["A"]["elevation"], "B": "B: re-entry, separated, %g°" % N["B"]["elevation"],
+            "C": "C: re-entry, captive, %g°" % N["C"]["elevation"],
+            "D": "D: delayed ignition, %g°, %.0f s coast" % (N["D"]["elevation"], d.get("coast_D", 24))}
     for c in "ABCD":
         n = N[c]
         p = n["profile"]
@@ -370,7 +370,7 @@ def fig_robust():
         for tag, ls, lw, name in tags:
             cu = cf[tag]["curve"]
             el = cf[tag]["x"]["el"]
-            sx = ("%.0f°" % el) + (("/%.0f s" % cf[tag]["x"]["coast"]) if c == "D" else "")
+            sx = ("%g°" % el) + (("/%.0f s" % cf[tag]["x"]["coast"]) if c == "D" else "")
             if len(tags) == 1:
                 ls, lw = CLS[c], 1.4
             ax[0].plot([x[0] for x in cu], [x[1] for x in cu], color=CCOL[c], ls=ls, lw=lw,
@@ -426,14 +426,14 @@ def fig_nesc():
     for case, col, mk in (("case09", C1, "o"), ("case10", C2, "^")):
         for k, r in d[case]["ref_profiles"].items():
             ax[1].plot(r["t"], [a / 1e3 for a in r["alt_m"]], color=GRID, lw=2.4,
-                       label="NESC reference simulations" if first else None)
+                       label="NESC reference" if first else None)
             first = False
         p = d[case]["profile"]
         st = max(1, len(p["t"]) // 16)
         off = 0 if case == "case09" else st // 2
         ax[1].plot(p["t"][off::st], [a / 1e3 for a in p["alt_m"]][off::st], ls="none", marker=mk, ms=3.5,
                    mfc="none", mew=0.9, color=col, label="SHyMA, case %d" % int(case[-2:]))
-    ax[1].legend(loc="lower center", fontsize=7)
+    ax[1].legend(loc="lower right", fontsize=6.5, handlelength=1.2, borderaxespad=0.2)
     ax[1].set_title("(b) Cases 9 and 10: cannonball", loc="left")
     # (c) case 17
     c = d["case17"]

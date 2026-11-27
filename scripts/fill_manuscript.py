@@ -20,7 +20,14 @@ def load(name):
 
 
 def f(x, n=1):
-    return ("%%.%df" % n) % x
+    """Round half away from zero on the shortest decimal representation of x, so that, e.g.,
+    0.815 (815 of 1000 runs) is printed as 0.82 and not as 0.81 (binary 0.81499...)."""
+    from decimal import Decimal, ROUND_HALF_UP
+    if not math.isfinite(x):
+        return ("%%.%df" % n) % x
+    d = Decimal(repr(float(x))).quantize(Decimal(1).scaleb(-n), rounding=ROUND_HALF_UP)
+    s = ("%%.%df" % n) % d
+    return s.lstrip("-") if float(s) == 0.0 else s
 
 
 def sgn(x, n=1):
@@ -71,8 +78,8 @@ def _new_round4_keys(K, aero):
     K["GD_D_LO"], K["GD_D_HI"] = f(gd["dwell_range_D"][0], 1), f(gd["dwell_range_D"][1], 1)
     K["GD_AR_LO"], K["GD_AR_HI"] = f(gd["dwell_retuned_range_A"][0], 1), f(gd["dwell_retuned_range_A"][1], 1)
     K["GD_DR_LO"], K["GD_DR_HI"] = f(gd["dwell_retuned_range_D"][0], 1), f(gd["dwell_retuned_range_D"][1], 1)
-    K["GD_EL_A"] = "%.0f" % best["A_retuned"]["el"]
-    K["GD_EL_D"], K["GD_CO_D"] = "%.0f" % best["D_retuned"]["el"], "%.0f" % best["D_retuned"]["coast"]
+    K["GD_EL_A"] = "%g" % best["A_retuned"]["el"]
+    K["GD_EL_D"], K["GD_CO_D"] = "%g" % best["D_retuned"]["el"], "%.0f" % best["D_retuned"]["coast"]
     tg = {round(x["mach"], 2): x for x in gd["table"]}
     K["GD_CD03"], K["GD_CD03ON"] = f(tg[0.3]["full_off"]["total"], 2), f(tg[0.3]["full_on"], 2)
     K["GD_CD2"], K["GD_CD6U"] = f(tg[2.0]["full_off"]["total"], 2), f(tg[6.0]["upper_off"], 2)
@@ -119,7 +126,8 @@ def _new_round4_keys(K, aero):
     K["RS_PMIN"] = f(rs["p_min"], 2)
 
     def xs(c, x):
-        return ("%.0f\\textdegree" % x["el"]) + (", %.0f~s" % x["coast"] if c == "D" else "")
+        return ("%g\\textdegree" % x["el"]) + (", %.0f~s" % x["coast"] if c == "D" else "") + \
+            ("$^{\\ddagger}$" if x["el"] > 85.0 else "")   # above the CLA limit of 85 deg
     rows = []
     for c in "ABCD":
         r = rs["concepts"][c]
@@ -144,20 +152,20 @@ def _new_round4_keys(K, aero):
         K["RS_P50_" + c] = f(cf["nominal"]["tau_use_p50"], 1)
         K["RS_R_" + c] = "%.0f" % cf["nominal"]["range_mean_km"]
     a3 = rs["concepts"]["A"]["confirm"]["R3"]
-    K["RS_A3_EL"], K["RS_A3_P"], K["RS_A3_P05"] = "%.0f" % a3["x"]["el"], f(a3["p_req"], 3), f(a3["tau_use_p05"], 1)
+    K["RS_A3_EL"], K["RS_A3_P"], K["RS_A3_P05"] = "%g" % a3["x"]["el"], f(a3["p_req"], 3), f(a3["tau_use_p05"], 1)
     K["RS_P05_A2"] = f(rs["concepts"]["A"]["confirm"]["nominal"]["tau_use_p05"], 2)
     d3 = rs["concepts"]["D"]["confirm"]["R3"]
     nf = round((1.0 - d3["p_req"]) * d3["n"])
     K["RS_D3_FAIL"] = ("no failure" if nf == 0 else ("%d failure%s" % (nf, "" if nf == 1 else "s")))
-    K["RS_D3_EL"], K["RS_D3_CO"] = "%.0f" % d3["x"]["el"], "%.0f" % d3["x"]["coast"]
+    K["RS_D3_EL"], K["RS_D3_CO"] = "%g" % d3["x"]["el"], "%.0f" % d3["x"]["coast"]
     K["RS_D3_P"], K["RS_D3_PLO"] = f(d3["p_req"], 3), f(d3["p_req_ci95"][0], 3)
     K["RS_D3_P05"], K["RS_D3_P50"], K["RS_D3_R"] = f(d3["tau_use_p05"], 1), f(d3["tau_use_p50"], 1), "%.0f" % d3["range_mean_km"]
     for c in "BC":
         sc = [q for q in rs["concepts"][c]["screen"] if q["x"]["el"] < 84.0]
-        K["RS_LINK0_" + c] = "%.0f--%.0f" % (min(q["x"]["el"] for q in sc), max(q["x"]["el"] for q in sc))
+        K["RS_LINK0_" + c] = "%g--%g" % (min(q["x"]["el"] for q in sc), max(q["x"]["el"] for q in sc))
         assert max(q["p_req"] for q in sc) == 0.0
         rec_ok = [q for q in sc if q["p_req_rec"] >= 0.95]
-        K["RS_REC_" + c] = "%.0f" % min(q["x"]["el"] for q in rec_ok)
+        K["RS_REC_" + c] = "%g" % min(q["x"]["el"] for q in rec_ok)
     if K.get("RS_REC_B") == K.get("RS_REC_C"):
         K["RS_REC_TXT"] = "from an elevation of %s\\textdegree\\ for both" % K["RS_REC_B"]
     else:
@@ -429,7 +437,7 @@ def main():
         K["GO_" + P] = "%d" % max(op) if op else "---"
     # Concept D
     K["D_EL"] = "%g" % N["D"]["elevation"]
-    K["A_EL"] = "%.0f" % N["A"]["elevation"]
+    K["A_EL"] = "%g" % N["A"]["elevation"]
     K["D_COAST"] = "%.0f" % cs["coast_D"]
     K["D_PWR"] = f(N["D"]["t_burnout"] - N["D"]["window_t"][0], 1)
     K["D_MPK"] = f(N["D"]["burnout_mach"], 2)          # peak window Mach of D (S30 burnout inside the window)
@@ -592,15 +600,15 @@ def main():
         K["RL_P05_LO"] = f(min(x["tau_use_p05"] for x in rlg), 1)
         K["RL_P05_HI"] = f(max(x["tau_use_p05"] for x in rlg), 1)
         bst = rl["best"]
-        K["RL_BEST"] = "%.0f\\textdegree\\ and %.1f~s" % (bst["el"], bst["coast"])
+        K["RL_BEST"] = "%g\\textdegree\\ and %.1f~s" % (bst["el"], bst["coast"])
         K["RL_N6"] = "%d" % sum(x["tau_use_p05"] >= 6.0 for x in rlg)
         K["RL_NG"] = "%d" % len(rlg)
         K["RL_BEST_C"], K["RL_SEL_C"] = f(rl["best_confirm_p05"], 1), f(rl["selected_confirm_p05"], 1)
         K["RL_DP05"] = sgn(rl["best_minus_selected_p05"], 2)
         lo, hi = rl["best_minus_selected_p05_ci95"]
         K["RL_DP05_LO"], K["RL_DP05_HI"] = sgn(lo, 2), sgn(hi, 2)
-        K["RL_EL_LO"] = "%.0f" % min(x["x"]["el"] for x in rlg)
-        K["RL_EL_HI"] = "%.0f" % max(x["x"]["el"] for x in rlg)
+        K["RL_EL_LO"] = "%g" % min(x["x"]["el"] for x in rlg)
+        K["RL_EL_HI"] = "%g" % max(x["x"]["el"] for x in rlg)
         K["RL_CO_LO"] = f(min(x["x"]["coast"] for x in rlg), 1)
         K["RL_CO_HI"] = f(max(x["x"]["coast"] for x in rlg), 1)
         K["RL_EDGE"] = "on the edge of" if rl["best_on_edge"] else "inside"
@@ -635,7 +643,7 @@ def main():
                 if abs(e_ - bst["el"]) < 1e-9 and abs(c_ - bst["coast"]) < 1e-9:
                     t = "\\underline{%s}" % t
                 cs__.append(t)
-            rows_.append("%.0f\\textdegree & %s \\\\" % (e_, " & ".join(cs__)))
+            rows_.append("%g\\textdegree & %s \\\\" % (e_, " & ".join(cs__)))
         K["RL_ROWS"] = "\n".join(rows_)
     except FileNotFoundError:
         pass
@@ -927,7 +935,7 @@ def main():
     for c_ in "ABCD":
         cp_ = rsj["concepts"][c_]["confirm"]["primary"]
         cn_ = rsj["concepts"][c_]["confirm"]["nominal"]
-        K["RSP_EL_" + c_] = ("%.0f\\textdegree{}/%.0f~s" % (cp_["x"]["el"], cp_["x"]["coast"])) if c_ == "D" else "%.0f\\textdegree{}" % cp_["x"]["el"]
+        K["RSP_EL_" + c_] = ("%g\\textdegree{}/%.0f~s" % (cp_["x"]["el"], cp_["x"]["coast"])) if c_ == "D" else "%g\\textdegree{}" % cp_["x"]["el"]
         K["RSP_P05_" + c_] = f(cp_["tau_use_p05"], 1)
         K["RSP_P_" + c_] = f(cp_["p_req"], 3)
         from scipy.stats import beta as _beta
@@ -939,20 +947,20 @@ def main():
         K["RSN_P_" + c_] = f(cn_["p_req"], 3)
         K["RSP_R_" + c_] = "%.0f" % cp_["range_mean_km"]
     ap_ = rsj["concepts"]["A"]
-    K["RS_AP_EL"] = "%.0f" % ap_["primary_x"]["el"]
+    K["RS_AP_EL"] = "%g" % ap_["primary_x"]["el"]
     K["RS_AP_P"] = f(ap_["confirm"]["primary"]["p_req"], 3)
     dd = rsj["concepts"]["D"]
     dp = dd["confirm"]["primary"]
-    K["RS_DP_EL"], K["RS_DP_CO"] = "%.0f" % dp["x"]["el"], "%.0f" % dp["x"]["coast"]
+    K["RS_DP_EL"], K["RS_DP_CO"] = "%g" % dp["x"]["el"], "%.0f" % dp["x"]["coast"]
     K["RS_DP_P05"], K["RS_DP_P50"], K["RS_DP_R"] = f(dp["tau_use_p05"], 1), f(dp["tau_use_p50"], 1), "%.0f" % dp["range_mean_km"]
     nf = round((1.0 - dp["p_req"]) * dp["n"])
     K["RS_DP_FAIL"] = "no failure" if nf == 0 else ("%d failure%s" % (nf, "" if nf == 1 else "s"))
     K["RS_DP_PLO"] = f(dp["p_req_ci95"][0], 3)
-    K["RS_D1_EL"], K["RS_D1_CO"] = "%.0f" % dd["R1_x"]["el"], "%.0f" % dd["R1_x"]["coast"]
+    K["RS_D1_EL"], K["RS_D1_CO"] = "%g" % dd["R1_x"]["el"], "%.0f" % dd["R1_x"]["coast"]
     if dd["R1_x"] == dd["primary_x"] and dd["R3_x"] == dd["primary_x"]:
         K["RS_DSINGLE"] = "(the same setting maximizes both the lower bound of $P$ and the 5th percentile)"
     else:
-        K["RS_DSINGLE"] = "(the single criteria give %.0f\\textdegree/%.0f~s and %.0f\\textdegree/%.0f~s)" % (
+        K["RS_DSINGLE"] = "(the single criteria give %g\\textdegree/%.0f~s and %g\\textdegree/%.0f~s)" % (
             dd["R1_x"]["el"], dd["R1_x"]["coast"], dd["R3_x"]["el"], dd["R3_x"]["coast"])
     try:
         re_ = load("robust_epistemic")
@@ -1016,6 +1024,13 @@ def main():
         K["GO_EL"] = "%d--%d\\textdegree" % (min(el for _, _, el in obj), max(el for _, _, el in obj))
         rr = [g[P][g["payloads"].index(p)][g["elevations"].index(el)]["impact_range_km"] for P, p, el in obj]
         K["GO_R"] = "%.0f--%.0f" % (min(rr), max(rr))
+        K["GO_RMIN10"] = "%d" % (10 * math.floor(min(rr) / 10.0))
+    gD = g["D"]   # Concept D grid (elevation x coast at three masses)
+    objD = [(int(p), x["impact_range_km"]) for p in gD["payloads"] for row in gD[str(p)] for x in row if x["objective_met"]]
+    if objD:
+        K["GO_DPMAX"] = "%d" % max(p for p, _ in objD)
+        K["GO_DR"] = "%.0f--%.0f" % (min(r for _, r in objD), max(r for _, r in objD))
+        K["GO_DRMIN10"] = "%d" % (10 * math.floor(min(r for _, r in objD) / 10.0))
     if obj:
         ps = sorted(set(p for _, p, _ in obj))
         cc = sorted(set(P for P, _, _ in obj))
@@ -1042,7 +1057,7 @@ def main():
         rows.append("%s & %s & %s & %s & %s & %s (%s\\textdegree, %s~s) \\\\" % (
             name, f(v["isp"], 1), f(v["b1"], 2), f(v["A_nominal"]["dwell_s"], 2),
             f(v["D_nominal"]["dwell_s"], 2), f(v["D_retuned"]["dwell_s"], 2),
-            "%.0f" % v["D_retuned"]["el"], "%.0f" % v["D_retuned"]["coast"]))
+            "%g" % v["D_retuned"]["el"], "%.0f" % v["D_retuned"]["coast"]))
     K["TS_ROWS"] = "\n".join(rows)
     # pseudo-5-DOF attitude verification (scripts/run_weathercock_check.py)
     wc = load("weathercock_check")

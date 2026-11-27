@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use SHyMA, please cite the software and the accompanying article."
 title: "SHyMA: Sounding-rocket Hypersonic Mission Analysis"
 type: software
-version: "2.5"
+version: "2.5.1"
 date-released: "2026-11-27"
 license: MIT
 doi: "10.5281/zenodo.24568161"

@@ -1,7 +1,7 @@
 {
-  "title": "SHyMA: Sounding-rocket Hypersonic Mission Analysis (v2.5)",
+  "title": "SHyMA: Sounding-rocket Hypersonic Mission Analysis (v2.5.1)",
   "upload_type": "software",
-  "version": "2.5",
+  "version": "2.5.1",
   "publication_date": "2026-11-27",
   "description": "<p>SHyMA is a framework of computationally light engineering models for the pre-Phase A mission analysis of hypersonic (scramjet) flight experiments boosted by sounding rockets: stakeholder test window, pseudo-5-DOF ascent and point-mass flight over the WGS-84 Earth, inverse design of the launch settings (deterministic or under uncertainty), residual-dispersion Monte Carlo, hot-wall stagnation heating, telemetry coverage and useful test time.</p><p>This archive contains the code, the public input data (VSB-30 flight table, HyShot 2 re-entry state, NASA NESC check-case reference trajectories), the result files behind every number of the accompanying article, test cases that reproduce it, and a single-file browser workbench. It accompanies the article \"Requirement-driven pre-Phase A mission analysis of sounding-rocket-boosted scramjet flight experiments\" (submitted to Acta Astronautica).</p>",
   "creators": [
@@ -30,7 +30,7 @@
   "access_right": "open",
   "related_identifiers": [
     {
-      "identifier": "https://github.com/pedrokuk23/SHyMA/tree/v2.5",
+      "identifier": "https://github.com/pedrokuk23/SHyMA/tree/v2.5.1",
       "relation": "isSupplementTo",
       "resource_type": "software",
       "scheme": "url"

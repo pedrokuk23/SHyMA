@@ -1,0 +1,142 @@
+{
+ "cases": [
+  {
+   "case": "base",
+   "prop_factor": 1.0,
+   "dry_factor": 1.0,
+   "isp": 256.1194257574633,
+   "s31_burn": 11.420931322928805,
+   "heldout_apogee_rms_pct": 2.5648166196437905,
+   "heldout_apogee_mean_pct": -1.4523128951821187,
+   "concepts": {
+    "A": {
+     "window_s": 6.141388968618003,
+     "impact_range_km": 405.6470106384839
+    },
+    "B": {
+     "window_s": 4.957494840255777,
+     "impact_range_km": 186.6044580763528
+    },
+    "C": {
+     "window_s": 4.892314541221538,
+     "impact_range_km": 186.63897009467004
+    },
+    "D": {
+     "window_s": 14.920571084553501,
+     "impact_range_km": 344.32385662437207
+    }
+   }
+  },
+  {
+   "case": "dry -10%",
+   "prop_factor": 1.0,
+   "dry_factor": 0.9,
+   "isp": 249.25613636340896,
+   "s31_burn": 11.342521020519966,
+   "heldout_apogee_rms_pct": 2.4771454386669522,
+   "heldout_apogee_mean_pct": -1.2991246752134813,
+   "concepts": {
+    "A": {
+     "window_s": 5.926961645077469,
+     "impact_range_km": 402.6607780397606
+    },
+    "B": {
+     "window_s": 4.959064685728322,
+     "impact_range_km": 186.51327677525552
+    },
+    "C": {
+     "window_s": 4.8975207504693685,
+     "impact_range_km": 186.54603361112055
+    },
+    "D": {
+     "window_s": 14.611268257347135,
+     "impact_range_km": 339.94108612281445
+    }
+   }
+  },
+  {
+   "case": "dry +10%",
+   "prop_factor": 1.0,
+   "dry_factor": 1.1,
+   "isp": 262.96134929754186,
+   "s31_burn": 11.495323044684621,
+   "heldout_apogee_rms_pct": 2.656681044841841,
+   "heldout_apogee_mean_pct": -1.5946067792865959,
+   "concepts": {
+    "A": {
+     "window_s": 6.106512762487732,
+     "impact_range_km": 408.4462079042239
+    },
+    "B": {
+     "window_s": 4.956061139166309,
+     "impact_range_km": 186.6920471470375
+    },
+    "C": {
+     "window_s": 4.887572649730373,
+     "impact_range_km": 186.72814356113068
+    },
+    "D": {
+     "window_s": 14.518780612168356,
+     "impact_range_km": 348.28391284714957
+    }
+   }
+  },
+  {
+   "case": "propellant -5%",
+   "prop_factor": 0.95,
+   "dry_factor": 1.0,
+   "isp": 265.26662874996305,
+   "s31_burn": 11.518332503771918,
+   "heldout_apogee_rms_pct": 2.5229156075506958,
+   "heldout_apogee_mean_pct": -1.3856032373785683,
+   "concepts": {
+    "A": {
+     "window_s": 5.958365805390088,
+     "impact_range_km": 404.5820346349875
+    },
+    "B": {
+     "window_s": 4.958082233273387,
+     "impact_range_km": 186.57427314662615
+    },
+    "C": {
+     "window_s": 4.892877115766794,
+     "impact_range_km": 186.60879713012133
+    },
+    "D": {
+     "window_s": 14.56033492470975,
+     "impact_range_km": 345.9445193952007
+    }
+   }
+  },
+  {
+   "case": "propellant +5%",
+   "prop_factor": 1.05,
+   "dry_factor": 1.0,
+   "isp": 247.81669995536714,
+   "s31_burn": 11.326185700386345,
+   "heldout_apogee_rms_pct": 2.6063210056634594,
+   "heldout_apogee_mean_pct": -1.5158956476229093,
+   "concepts": {
+    "A": {
+     "window_s": 6.298984697263435,
+     "impact_range_km": 406.6297595176133
+    },
+    "B": {
+     "window_s": 4.956939237851998,
+     "impact_range_km": 186.63237436568787
+    },
+    "C": {
+     "window_s": 4.891782378982214,
+     "impact_range_km": 186.66687450498142
+    },
+    "D": {
+     "window_s": 14.983587744761948,
+     "impact_range_km": 342.6264167285365
+    }
+   }
+  }
+ ],
+ "concepts": "ABCD",
+ "note": "Isp and t_b1 recalibrated on V01 for each case",
+ "cpu_s": 89.93235206604004
+}

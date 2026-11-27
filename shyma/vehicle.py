@@ -132,7 +132,10 @@ def vsb30(payload_mass=400.0, isp=None, s31_burn=None, coast=2.0, t_payload_sep=
           beta_stack=None):
     """VSB-30 (S31 + S30) model from public data.
 
-    Stage gross/empty masses: 900/284 kg and 1200/341 kg; S30 action time
+    Stage masses (S31_PROP/S31_DRY, S30_PROP/S30_DRY): motor propellant and
+    structural masses of the IAE motor table (Palmerio, 2017) plus the inert
+    parts that close the 2579 kg lift-off mass with a 400 kg payload
+    (Kasemodel, 2010), split equally between the stages; S30 action time
     32 s (Garcia et al., JATM 2011); diameter 0.557 m. Two parameters are
     calibrated on flight V01 (calibration.py): the effective specific impulse
     (common to both motors) and the effective burn time of the S31 booster,
@@ -162,10 +165,10 @@ def vsb30(payload_mass=400.0, isp=None, s31_burn=None, coast=2.0, t_payload_sep=
     if s31_burn is None:
         s31_burn = S31_BURN
     b1 = s31_burn * burn_factor[0]
-    s31 = Stage("S31", 616.0 * impulse_factor[0], 284.0 * dry_factor, b1, isp,
+    s31 = Stage("S31", S31_PROP * impulse_factor[0], S31_DRY * dry_factor, b1, isp,
                 t_ign=0.0, t_drop=b1, shape=THRUST_SHAPE[0], exit_area=ae[0])
     t2 = b1 + coast
-    s30 = Stage("S30", 859.0 * impulse_factor[1], 341.0 * dry_factor, S30_BURN * burn_factor[1], isp,
+    s30 = Stage("S30", S30_PROP * impulse_factor[1], S30_DRY * dry_factor, S30_BURN * burn_factor[1], isp,
                 t_ign=t2, t_drop=t_payload_sep, shape=THRUST_SHAPE[1], exit_area=ae[1])
     area = math.pi * 0.557 ** 2 / 4.0
     tv_excess = 0.0
@@ -186,6 +189,14 @@ def vsb30(payload_mass=400.0, isp=None, s31_burn=None, coast=2.0, t_payload_sep=
         DRAG_FACTORY(v)
     return v
 
+
+# Stage masses (kg). Propellant and motor structural masses: IAE motor table in
+# Palmerio (2017), S31 670/240 kg and S30 875/250 kg (S31 670 kg and S30 874 kg in
+# Kasemodel, 2010). Lift-off mass with a 400 kg payload: 2579 kg (Kasemodel, 2010);
+# the remaining 144 kg of fins, adapters and other inert parts are split equally.
+S31_PROP, S30_PROP = 670.0, 875.0
+_INERT = 2579.0 - 400.0 - (670.0 + 240.0 + 875.0 + 250.0)
+S31_DRY, S30_DRY = 240.0 + _INERT / 2.0, 250.0 + _INERT / 2.0
 
 # Defaults; calibration.py fits them on flight V01 (236.0 km apogee, 189.0 km range, 392 kg, 84 deg);
 # overwritten at import time if calibration.json exists.

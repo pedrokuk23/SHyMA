@@ -2,10 +2,10 @@ cff-version: 1.2.0
 message: "If you use SHyMA, please cite the software and the accompanying article."
 title: "SHyMA: Sounding-rocket Hypersonic Mission Analysis"
 type: software
-version: "2.4"
-date-released: "2026-11-26"
+version: "2.5"
+date-released: "2026-11-27"
 license: MIT
-doi: "10.5281/zenodo.24568162"
+doi: "10.5281/zenodo.24568161"
 repository-code: "https://github.com/pedrokuk23/SHyMA"
 authors:
   - family-names: "Kukulka de Albuquerque"

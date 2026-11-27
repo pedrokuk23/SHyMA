@@ -34,17 +34,17 @@
   },
   {
    "path": "result.p_window",
-   "value": 0.947,
+   "value": 0.95,
    "tol": 1e-12
   },
   {
    "path": "result.window_p05",
-   "value": 2.7515262105402156,
+   "value": 3.025445337086272,
    "tol": 1e-09
   },
   {
    "path": "result.window_p50",
-   "value": 11.664565380330892,
+   "value": 11.738670337987344,
    "tol": 1e-09
   }
  ]

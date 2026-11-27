@@ -38,7 +38,7 @@
  "expect": [
   {
    "path": "summary.window_s",
-   "value": 4.957245517196384,
+   "value": 4.957507184396434,
    "tol": 1e-06
   },
   {
@@ -48,17 +48,17 @@
   },
   {
    "path": "summary.steady_s",
-   "value": 1.3396135641383466,
+   "value": 1.3396808330456338,
    "tol": 1e-06
   },
   {
    "path": "summary.apogee_km",
-   "value": 232.25875579793566,
+   "value": 232.23534066417534,
    "tol": 1e-06
   },
   {
    "path": "summary.impact_range_km",
-   "value": 186.63431589348536,
+   "value": 186.6035864322074,
    "tol": 1e-06
   }
  ]

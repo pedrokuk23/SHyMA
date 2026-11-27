@@ -77,6 +77,7 @@ The result files of this release were computed in one run of `run_all.sh` on an 
 | S2-H, S4-B (geometry-based stability derivatives and drag) | `scripts/run_geometric_aero.py`, `scripts/run_geometric_drag.py`, `scripts/run_stability_check.py` | `results/geometric_aero.json`, `results/geometric_drag.json`, `results/stability_check.json` |
 | Sec. 5, Table S10 (nozzle exit and ambient-pressure thrust loss; held-out statistics of each variant) | `scripts/run_thrust_pressure.py` | `results/thrust_pressure.json` |
 | Sec. 5.4, Table S13 (residual dispersion as an equivalent tip-off) | `scripts/run_tipoff_check.py` | `results/tipoff_check.json` |
+| Sec. 4.2, S4-A (stage-mass sensitivity, recalibrated on V01) | `scripts/run_stage_mass_sensitivity.py` | `results/stage_mass_sensitivity.json` |
 | Sec. 5 (effect of the HyShot 2 q bias on Concepts B and C) | `scripts/run_q_bias.py` | `results/q_bias.json` |
 | Table 4, Figs. 3–4, Table S7, Figs. S3 and S8 (case study) | `scripts/run_casestudy.py` | `results/casestudy.json` |
 | Sec. 4.3, S4-A (heating checks) | `scripts/run_thermal_model_check.py`, `scripts/run_aerothermal_check.py` | `results/thermal_model_check.json`, `results/aerothermal_check.json` |
@@ -130,11 +131,11 @@ The model uses only public data. No data of the Brazilian 14-X flights and no pr
 
 `HASHES.sha256` lists the SHA-256 of every file. Verify with `shasum -a 256 -c HASHES.sha256` (macOS) or `sha256sum -c HASHES.sha256` (Linux). The workbench shows the hashes of the code it embeds (About tab).
 
-Results were produced with Python 3.13 on Linux and checked on macOS (Apple M5 Pro); `requirements-lock.txt` lists the exact versions (NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2, pymsis 0.13.0, JSBSim 1.3.3, pytest 9.1.1). The code runs on Python 3.9 or later by syntax, but only Python 3.13 was tested. The trajectory core uses only the standard library (`random.Random(seed)`), so the results are reproduced to round-off; agreement to 1e-9 can depend on the platform's math library.
+Results were produced with Python 3.13 on Linux (eight cores), and the paper test cases and the test suite were re-run on a second Linux machine; `requirements-lock.txt` lists the exact versions (NumPy 2.5.3, SciPy 1.18.1, Matplotlib 3.11.2, pymsis 0.13.0, JSBSim 1.3.3, pytest 9.1.1). The code runs on Python 3.9 or later by syntax, but only Python 3.13 was tested. The trajectory core uses only the standard library (`random.Random(seed)`), so the results are reproduced to round-off; agreement to 1e-9 can depend on the platform's math library.
 
 ## Archive
 
-Each release of this repository is archived on Zenodo: concept DOI [10.5281/zenodo.24568161](https://doi.org/10.5281/zenodo.24568161) (all versions), version 2.4 DOI [10.5281/zenodo.24568162](https://doi.org/10.5281/zenodo.24568162). Version 2.4 accompanies the Acta Astronautica submission; all its result files were computed in one run of `run_all.sh` with the released code, and the table, figure and section references of the paper test cases and of the workbench follow the submitted manuscript.
+Each release of this repository is archived on Zenodo under the concept DOI [10.5281/zenodo.24568161](https://doi.org/10.5281/zenodo.24568161), which resolves to the latest version. Version 2.5 accompanies the Acta Astronautica submission: it adopts the stage masses of the IAE motor table (Palmerio, 2017; Kasemodel, 2010), sets the nominal elevation of Concept D to the optimum of the inverse design, and recomputes every result with the released code; the run was resumed once, from `scripts/run_robust_selection.py`, after the candidate grid of Concept D was centred on the new nominal setting (`results/chain_run.log`). Version 2.4, the earlier submission version, has the DOI [10.5281/zenodo.24568162](https://doi.org/10.5281/zenodo.24568162). The table, figure and section references of the paper test cases and of the workbench follow the submitted manuscript.
 
 ## Authors
 

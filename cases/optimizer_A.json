@@ -51,7 +51,7 @@
  "expect": [
   {
    "path": "best.threshold",
-   "value": 6.2369843636980065,
+   "value": 6.147000813687065,
    "tol": 1e-06
   },
   {

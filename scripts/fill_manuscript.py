@@ -173,6 +173,8 @@ def main():
 
     # calibration
     K["ISP"] = f(cal["isp_vsb30"], 1)
+    _d = [100 * (1 - cal["isp_vsb30"] / x) for x in (260.0, 263.0)]   # IAE vacuum Isp of S31 and S30 (Palmerio, 2017)
+    K["ISP_IAE_D"] = ("%.1f--%.1f\\%% below" % (min(_d), max(_d))) if min(_d) > 0 else ("within %.1f\\%% of" % max(abs(x) for x in _d))
     K["TB1"] = f(cal["s31_burn"], 2)
     J = cal["jacobian_km_per_s"]
     K["JAC"] = r"$\begin{bmatrix} %s & %s \\ %s & %s \end{bmatrix}$" % (
@@ -426,7 +428,7 @@ def main():
               if g[P][i][j]["objective_met"]]
         K["GO_" + P] = "%d" % max(op) if op else "---"
     # Concept D
-    K["D_EL"] = "%.0f" % N["D"]["elevation"]
+    K["D_EL"] = "%g" % N["D"]["elevation"]
     K["A_EL"] = "%.0f" % N["A"]["elevation"]
     K["D_COAST"] = "%.0f" % cs["coast_D"]
     K["D_PWR"] = f(N["D"]["t_burnout"] - N["D"]["window_t"][0], 1)
@@ -695,6 +697,16 @@ def main():
         if ua:
             t += (", and stays at 0.90 or more " if ub else "stays at 0.90 or more from 400~kg ") + ua
         K["MCM_TXT"] = t
+        # stage-mass sensitivity (run_stage_mass_sensitivity.py)
+        sms = load("stage_mass_sensitivity")["cases"]
+        base = [c for c in sms if c["case"] == "base"][0]
+        alt = [c for c in sms if c["case"] != "base"]
+        rms = [c["heldout_apogee_rms_pct"] for c in alt]
+        K["SMS_RMS_LO"], K["SMS_RMS_HI"] = f(min(rms)), f(max(rms))
+        isp = [c["isp"] for c in alt]
+        K["SMS_ISP_LO"], K["SMS_ISP_HI"] = f(min(isp)), f(max(isp))
+        dmax = {k: max(abs(c["concepts"][k]["window_s"] - base["concepts"][k]["window_s"]) for c in alt) for k in "ABCD"}
+        K["SMS_DA"], K["SMS_DBC"], K["SMS_DD"] = f(dmax["A"]), f(max(dmax["B"], dmax["C"])), f(dmax["D"])
         _edge = any("leq" in K["MCM_" + t + c] or "geq" in K["MCM_" + t + c] for t in ("", "U") for c in "ABCD")
         K["MCM_EDGE"] = "; $\\leq$, $\\geq$: edge of the 20~kg mass grid" if _edge else ""
         K["MCM_RANGE"] = ("%.0f--%.0f" % (min(vals), max(vals))) if vals else "--"
@@ -795,7 +807,7 @@ def main():
     from shyma import vehicle as _veh
     _A = math.pi * 0.557 ** 2 / 4.0
     K["BETA_TV"] = "%.0f" % (10 * round(400.0 / (_A * _veh.cd_generic(6.0)) / 10.0))
-    K["D_BETA_STACK"] = "%.0f" % (100 * round((400.0 + 341.0) / (_A * _veh.cd_generic(6.0)) / 100.0))
+    K["D_BETA_STACK"] = "%.0f" % (100 * round((400.0 + _veh.S30_DRY) / (_A * _veh.cd_generic(6.0)) / 100.0))
     K["A_SEPM2"] = f(N["A"]["burnout_mach"], 2)
     ej = N["D"].get("expose_state", {})
     K["D_JET_H"], K["D_JET_M"] = f(ej.get("alt_km", float("nan")), 1), f(ej.get("mach", float("nan")), 1)
@@ -918,6 +930,10 @@ def main():
         K["RSP_EL_" + c_] = ("%.0f\\textdegree{}/%.0f~s" % (cp_["x"]["el"], cp_["x"]["coast"])) if c_ == "D" else "%.0f\\textdegree{}" % cp_["x"]["el"]
         K["RSP_P05_" + c_] = f(cp_["tau_use_p05"], 1)
         K["RSP_P_" + c_] = f(cp_["p_req"], 3)
+        from scipy.stats import beta as _beta
+        _n = int(rsj["n_confirm"]); _k = int(round(cp_["p_req"] * _n))
+        K["RSP_LB_" + c_] = f(_beta.ppf(0.025, _k, _n - _k + 1) if _k > 0 else 0.0, 3)
+        K["RS_NCONF"] = "%d" % _n
         K["RSP2_P_" + c_] = f(cp_["p_req"], 2)
         K["RSN_P05_" + c_] = f(cn_["tau_use_p05"], 1)
         K["RSN_P_" + c_] = f(cn_["p_req"], 3)

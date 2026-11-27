@@ -8,7 +8,7 @@
  "params": {
   "concept": "D",
   "payload": 400.0,
-  "el": 73.0,
+  "el": 72.5,
   "az": 45.0,
   "beta": 7461.687194568131,
   "rn_le": 0.002,
@@ -38,7 +38,7 @@
  "expect": [
   {
    "path": "summary.window_s",
-   "value": 14.717002406655737,
+   "value": 14.920309558893393,
    "tol": 1e-06
   },
   {
@@ -48,17 +48,17 @@
   },
   {
    "path": "summary.steady_s",
-   "value": 3.6220703886885985,
+   "value": 3.648836895508424,
    "tol": 1e-06
   },
   {
    "path": "summary.apogee_km",
-   "value": 51.51139954492077,
+   "value": 51.11080983608961,
    "tol": 1e-06
   },
   {
    "path": "summary.impact_range_km",
-   "value": 345.5496146374733,
+   "value": 344.3215651121145,
    "tol": 1e-06
   }
  ]

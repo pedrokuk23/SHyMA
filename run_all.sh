@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Recomputes every result file of results/ and every figure of the article (figures/).
-# About 1.5 h on an Apple M5 Pro and several hours on an older 2-core laptop; the Monte Carlo, the selection under uncertainty, the wind calibration and the
+# About 1 h 45 min on an eight-core Linux machine and about 8 h on two cores; the Monte Carlo, the selection under uncertainty, the wind calibration and the
 # thrust-shape studies dominate.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -37,6 +37,7 @@ python3 scripts/run_mass_ceiling_mc.py         # probabilistic mass ceilings of 
 python3 scripts/run_le_transient.py           # transient lumped leading-edge temperature vs equilibrium bound
 python3 scripts/run_ignition_check.py         # Concept D: attitude error at S30 ignition, weaker static stability
 python3 scripts/run_tipoff_check.py           # residual dispersion as an equivalent tip-off instead of k_w
+python3 scripts/run_stage_mass_sensitivity.py # stage masses scaled, Isp and t_b1 recalibrated on V01
 python3 scripts/run_site_bias.py              # launch-site atmosphere (NRLMSISE-00) and the CLA/Esrange split
 python3 scripts/make_figures.py                # figures/*.pdf
 python3 scripts/fill_manuscript.py             # results/manuscript_values.json: every number printed in the article
